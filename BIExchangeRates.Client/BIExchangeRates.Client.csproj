@@ -2,10 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Maurizio Basaglia</Authors>
+    <Description>A client for the Web API of the currency exchange rates portal of Banca d'Italia (https://tassidicambio.bancaditalia.it).</Description>
+    <Copyright>© 2020 Maurizio Basaglia</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags></PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
