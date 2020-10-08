@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Maurizio Basaglia</Authors>
+    <Description>A wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).</Description>
+    <Copyright>© 2020 Maurizio Basaglia</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags></PackageTags>
+    <RepositoryUrl>https://github.com/maurizuki/BIExchangeRates.Client</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
