@@ -34,7 +34,7 @@ using System.Threading.Tasks;
 namespace BIExchangeRates.Client
 {
 	/// <summary>
-	/// Provides a client for the Web API of the currency exchange rates portal of Banca d'Italia (https://tassidicambio.bancaditalia.it).
+	/// A wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
 	/// </summary>
 	public sealed class ExchangeRatesClient : IExchangeRatesClient
 	{
