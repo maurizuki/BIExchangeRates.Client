@@ -269,10 +269,11 @@ namespace BIExchangeRates.Client
 		private async Task<string> GetAsync(string requestUri)
 		{
 			var response = await _httpClient.GetAsync(requestUri);
+			var content = await response.Content.ReadAsStringAsync();
 			if (!response.IsSuccessStatusCode)
 				throw new HttpRequestException(
-					$"The server responded with an error code {(int)response.StatusCode} ({response.StatusCode})");
-			return await response.Content.ReadAsStringAsync();
+					$"The server responded with an error. Status code: {(int)response.StatusCode}; Message: {content}");
+			return content;
 		}
 	}
 }

@@ -9,6 +9,7 @@
     <PackageTags></PackageTags>
     <RepositoryUrl>https://github.com/maurizuki/BIExchangeRates.Client</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
