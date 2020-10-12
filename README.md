@@ -45,7 +45,7 @@ public async Task<DailyRatesModel> GetDailyRates (DateTime referenceDate, string
 **referenceDate** DateTime  
 The reference date for the exchange rates.  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
@@ -60,7 +60,7 @@ The reference date for the exchange rates.
 **baseCurrencyIsoCodes** IEnumerable&lt;string&gt;  
 The list of ISO codes of the required currencies (case insensitive).  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
@@ -79,7 +79,7 @@ The reference month for the exchange rates (1-12).
 **year** int  
 The reference year for the exchange rates.  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
@@ -96,7 +96,7 @@ The reference year for the exchange rates.
 **baseCurrencyIsoCodes** IEnumerable&lt;string&gt;  
 The list of ISO codes of the required currencies (case insensitive).  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
@@ -113,7 +113,7 @@ public async Task<AnnualAverageRatesModel> GetAnnualAverageRates (int year, stri
 **year** int  
 The reference year for the exchange rates.  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
@@ -128,7 +128,7 @@ The reference year for the exchange rates.
 **baseCurrencyIsoCodes** IEnumerable&lt;string&gt;  
 The list of ISO codes of the required currencies (case insensitive).  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
@@ -149,7 +149,7 @@ The end date of the range for the exchange rates.
 **baseCurrencyIsoCode** string  
 The ISO code of the required currency (case insensitive).  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
@@ -174,7 +174,7 @@ The end year of the range for the exchange rates.
 **baseCurrencyIsoCode** string  
 The ISO code of the required currency (case insensitive).  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
@@ -195,7 +195,7 @@ The end year of the range for the exchange rates.
 **baseCurrencyIsoCode** string  
 The ISO code of the required currency (case insensitive).  
 **currencyIsoCode** string  
-The ISO code of the reference currency ("EUR" or "USD", case insensitive).  
+The ISO code of the reference currency ("EUR", "USD" or "ITL", case insensitive).  
 **language** Language  
 The language of the returned data.  
 
