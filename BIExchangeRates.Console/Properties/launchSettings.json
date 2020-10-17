@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BIExchangeRates.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "latest"
+    }
+  }
+}
