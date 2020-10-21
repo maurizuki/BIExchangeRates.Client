@@ -32,34 +32,33 @@ namespace BIExchangeRates.Client
 
 	public interface IExchangeRatesClient
 	{
-		Task<LatestRatesModel> GetLatestRates(Language language);
+		Task<LatestRatesModel> GetLatestRates(Language language = Language.En);
 
-		Task<DailyRatesModel> GetDailyRates(DateTime referenceDate, string currencyIsoCode,
-			Language language);
+		Task<DailyRatesModel> GetDailyRates(DateTime referenceDate, string currencyIsoCode, Language language = Language.En);
 
 		Task<DailyRatesModel> GetDailyRates(DateTime referenceDate, IEnumerable<string> baseCurrencyIsoCodes,
-			string currencyIsoCode, Language language);
+			string currencyIsoCode, Language language = Language.En);
 
 		Task<MonthlyAverageRatesModel> GetMonthlyAverageRates(int month, int year, string currencyIsoCode,
-			Language language);
+			Language language = Language.En);
 
-		Task<MonthlyAverageRatesModel> GetMonthlyAverageRates(int month, int year,
-			IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language);
+		Task<MonthlyAverageRatesModel> GetMonthlyAverageRates(int month, int year, IEnumerable<string> baseCurrencyIsoCodes,
+			string currencyIsoCode, Language language = Language.En);
 
-		Task<AnnualAverageRatesModel> GetAnnualAverageRates(int year, string currencyIsoCode, Language language);
+		Task<AnnualAverageRatesModel> GetAnnualAverageRates(int year, string currencyIsoCode, Language language = Language.En);
 
 		Task<AnnualAverageRatesModel> GetAnnualAverageRates(int year, IEnumerable<string> baseCurrencyIsoCodes,
-			string currencyIsoCode, Language language);
+			string currencyIsoCode, Language language = Language.En);
 
 		Task<DailyTimeSeriesModel> GetDailyTimeSeries(DateTime startDate, DateTime endDate, string baseCurrencyIsoCode,
-			string currencyIsoCode, Language language);
+			string currencyIsoCode, Language language = Language.En);
 
 		Task<MonthlyTimeSeriesModel> GetMonthlyTimeSeries(int startMonth, int startYear, int endMonth, int endYear,
-			string baseCurrencyIsoCode, string currencyIsoCode, Language language);
+			string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En);
 
 		Task<AnnualTimeSeriesModel> GetAnnualTimeSeries(int startYear, int endYear, string baseCurrencyIsoCode,
-			string currencyIsoCode, Language language);
+			string currencyIsoCode, Language language = Language.En);
 
-		Task<CurrenciesModel> GetCurrencies(Language language);
+		Task<CurrenciesModel> GetCurrencies(Language language = Language.En);
 	}
 }
