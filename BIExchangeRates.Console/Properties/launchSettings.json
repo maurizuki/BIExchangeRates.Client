@@ -1,8 +1,15 @@
 {
   "profiles": {
     "BIExchangeRates.Console": {
+      "commandName": "Project"
+    },
+    "ExchangeRates.Console latest": {
       "commandName": "Project",
       "commandLineArgs": "latest"
+    },
+    "ExchangeRates.Console daily": {
+      "commandName": "Project",
+      "commandLineArgs": "daily 2019-12-31 EUR USD GBP"
     }
   }
 }
