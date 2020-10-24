@@ -274,7 +274,7 @@ namespace BIExchangeRates.Client
 			var content = await response.Content.ReadAsStringAsync();
 			if (!response.IsSuccessStatusCode)
 				throw new HttpRequestException(
-					$"The server responded with an error. Status code: {(int)response.StatusCode}; Message: {content}");
+					$"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}). Response content: {content}");
 			return content;
 		}
 	}
