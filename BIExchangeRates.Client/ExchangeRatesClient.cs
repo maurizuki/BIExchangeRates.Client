@@ -33,38 +33,33 @@ using System.Threading.Tasks;
 
 namespace BIExchangeRates.Client
 {
-	/// <summary>
-	/// Provides a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
-	/// </summary>
-	public sealed class ExchangeRatesClient : IExchangeRatesClient
+    /// <summary>
+    /// Provides a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
+    /// </summary>
+    public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	{
-		private const string BaseAddress = "https://tassidicambio.bancaditalia.it/terzevalute-wf-web/rest/v1.0/";
-
-		private const string LatestRatesPath = "latestRates";
-
-		private const string DailyRatesPath = "dailyRates";
-
-		private const string MonthlyAverageRatesPath = "monthlyAverageRates";
-
-		private const string AnnualAverageRatesPath = "annualAverageRates";
-
-		private const string DailyTimeSeriesPath = "dailyTimeSeries";
-
-		private const string MonthlyTimeSeriesPath = "monthlyTimeSeries";
-
-		private const string AnnualTimeSeriesPath = "annualTimeSeries";
-
-		private const string CurrenciesPath = "currencies";
-
-		private readonly HttpClient _httpClient;
+		/// <summary>
+		/// Initializes a new instance of the ExchangeRatesClient class using a HttpClientHandler that is disposed when this instance is disposed.
+		/// </summary>
+		public ExchangeRatesClient() : this(new HttpClientHandler(), true) { }
 
 		/// <summary>
-		/// Initializes a new instance of the ExchangeRatesClient class.
+		/// Initializes a new instance of the ExchangeRatesClient class with the specified handler. The handler is disposed when this instance is disposed.
 		/// </summary>
-		public ExchangeRatesClient()
-		{
-			_httpClient = new HttpClient { BaseAddress = new Uri(BaseAddress) };
-			_httpClient.DefaultRequestHeaders.Add("Accept", MediaTypeNames.Application.Json);
+		/// <param name="handler">The HttpMessageHandler responsible for processing the HTTP response messages.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public ExchangeRatesClient(HttpMessageHandler handler) : this(handler, true) { }
+
+		/// <summary>
+		/// Initializes a new instance of the ExchangeRatesClient class with the provided handler, and specifies whether that handler should be disposed when this instance is disposed.
+		/// </summary>
+		/// <param name="handler">The HttpMessageHandler responsible for processing the HTTP response messages.</param>
+		/// <param name="disposeHandler">true if the inner handler should be disposed of by ExchangeRatesClient.Dispose; false if you intend to reuse the inner handler.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public ExchangeRatesClient(HttpMessageHandler handler, bool disposeHandler) : base(handler, disposeHandler)
+        {
+			BaseAddress = new Uri("https://tassidicambio.bancaditalia.it/terzevalute-wf-web/rest/v1.0/");
+			DefaultRequestHeaders.Add("Accept", MediaTypeNames.Application.Json);
 		}
 
 		/// <summary>
@@ -74,7 +69,7 @@ namespace BIExchangeRates.Client
 		/// <returns>A task that represents the asynchronous operation. The task result contains the latest available exchange rates for all the valid currencies.</returns>
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<LatestRatesModel> GetLatestRates(Language language = Language.En) =>
-			await GetModel<LatestRatesModel>($"{LatestRatesPath}?lang={language}");
+			await GetModel<LatestRatesModel>($"latestRates?lang={language}");
 
 		/// <summary>
 		/// Returns the daily exchange rates for a specific date for all the available currencies.
@@ -103,7 +98,7 @@ namespace BIExchangeRates.Client
 		{
 			if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 			var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-			return await GetModel<DailyRatesModel>(new StringBuilder(DailyRatesPath)
+			return await GetModel<DailyRatesModel>(new StringBuilder("dailyRates")
 				.Append("?referenceDate=").Append(referenceDate.ToString("yyyy-MM-dd"))
 				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
 				.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
@@ -141,7 +136,7 @@ namespace BIExchangeRates.Client
 		{
 			if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 			var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-			return await GetModel<MonthlyAverageRatesModel>(new StringBuilder(MonthlyAverageRatesPath)
+			return await GetModel<MonthlyAverageRatesModel>(new StringBuilder("monthlyAverageRates")
 				.Append("?month=").Append(month)
 				.Append("&year=").Append(year)
 				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
@@ -178,7 +173,7 @@ namespace BIExchangeRates.Client
 		{
 			if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 			var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-			return await GetModel<AnnualAverageRatesModel>(new StringBuilder(AnnualAverageRatesPath)
+			return await GetModel<AnnualAverageRatesModel>(new StringBuilder("annualAverageRates")
 				.Append("?year=").Append(year)
 				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
 				.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
@@ -199,7 +194,7 @@ namespace BIExchangeRates.Client
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<DailyTimeSeriesModel> GetDailyTimeSeries(DateTime startDate, DateTime endDate,
 			string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En) =>
-			await GetModel<DailyTimeSeriesModel>(new StringBuilder(DailyTimeSeriesPath)
+			await GetModel<DailyTimeSeriesModel>(new StringBuilder("dailyTimeSeries")
 				.Append("?startDate=").Append(startDate.ToString("yyyy-MM-dd"))
 				.Append("&endDate=").Append(endDate.ToString("yyyy-MM-dd"))
 				.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
@@ -221,7 +216,7 @@ namespace BIExchangeRates.Client
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<MonthlyTimeSeriesModel> GetMonthlyTimeSeries(int startMonth, int startYear, int endMonth, int endYear,
 			string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En) =>
-			await GetModel<MonthlyTimeSeriesModel>(new StringBuilder(MonthlyTimeSeriesPath)
+			await GetModel<MonthlyTimeSeriesModel>(new StringBuilder("monthlyTimeSeries")
 				.Append("?startMonth=").Append(startMonth)
 				.Append("&startYear=").Append(startYear)
 				.Append("&endMonth=").Append(endMonth)
@@ -243,7 +238,7 @@ namespace BIExchangeRates.Client
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<AnnualTimeSeriesModel> GetAnnualTimeSeries(int startYear, int endYear, string baseCurrencyIsoCode,
 			string currencyIsoCode, Language language = Language.En) =>
-			await GetModel<AnnualTimeSeriesModel>(new StringBuilder(AnnualTimeSeriesPath)
+			await GetModel<AnnualTimeSeriesModel>(new StringBuilder("annualTimeSeries")
 				.Append("?startYear=").Append(startYear)
 				.Append("&endYear=").Append(endYear)
 				.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
@@ -258,11 +253,11 @@ namespace BIExchangeRates.Client
 		/// <returns>A task that represents the asynchronous operation. The task result contains the list of all the available currencies.</returns>
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<CurrenciesModel> GetCurrencies(Language language = Language.En) =>
-			await GetModel<CurrenciesModel>($"{CurrenciesPath}?lang={language}");
+			await GetModel<CurrenciesModel>($"currencies?lang={language}");
 
 		private async Task<T> GetModel<T>(string requestUri)
 		{
-			var response = await _httpClient.GetAsync(requestUri);
+			var response = await GetAsync(requestUri);
 			var content = await response.Content.ReadAsStringAsync();
 			if (!response.IsSuccessStatusCode)
 				throw new HttpRequestException(
