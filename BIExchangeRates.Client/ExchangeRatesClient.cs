@@ -74,8 +74,7 @@ namespace BIExchangeRates.Client
 		/// <returns>A task that represents the asynchronous operation. The task result contains the latest available exchange rates for all the valid currencies.</returns>
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<LatestRatesModel> GetLatestRates(Language language = Language.En) =>
-			JsonConvert.DeserializeObject<LatestRatesModel>(
-				await GetAsync($"{LatestRatesPath}?lang={language}"));
+			await GetModel<LatestRatesModel>($"{LatestRatesPath}?lang={language}");
 
 		/// <summary>
 		/// Returns the daily exchange rates for a specific date for all the available currencies.
@@ -104,14 +103,13 @@ namespace BIExchangeRates.Client
 		{
 			if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 			var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-			return JsonConvert.DeserializeObject<DailyRatesModel>(
-				await GetAsync(new StringBuilder(DailyRatesPath)
-					.Append("?referenceDate=").Append(referenceDate.ToString("yyyy-MM-dd"))
-					.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-					.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
-					.Append("&currencyIsoCode=").Append(currencyIsoCode)
-					.Append("&lang=").Append(language)
-					.ToString()));
+			return await GetModel<DailyRatesModel>(new StringBuilder(DailyRatesPath)
+				.Append("?referenceDate=").Append(referenceDate.ToString("yyyy-MM-dd"))
+				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
+				.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
+				.Append("&currencyIsoCode=").Append(currencyIsoCode)
+				.Append("&lang=").Append(language)
+				.ToString());
 		}
 
 		/// <summary>
@@ -143,15 +141,14 @@ namespace BIExchangeRates.Client
 		{
 			if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 			var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-			return JsonConvert.DeserializeObject<MonthlyAverageRatesModel>(
-				await GetAsync(new StringBuilder(MonthlyAverageRatesPath)
-					.Append("?month=").Append(month)
-					.Append("&year=").Append(year)
-					.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-					.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
-					.Append("&currencyIsoCode=").Append(currencyIsoCode)
-					.Append("&lang=").Append(language)
-					.ToString()));
+			return await GetModel<MonthlyAverageRatesModel>(new StringBuilder(MonthlyAverageRatesPath)
+				.Append("?month=").Append(month)
+				.Append("&year=").Append(year)
+				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
+				.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
+				.Append("&currencyIsoCode=").Append(currencyIsoCode)
+				.Append("&lang=").Append(language)
+				.ToString());
 		}
 
 		/// <summary>
@@ -181,14 +178,13 @@ namespace BIExchangeRates.Client
 		{
 			if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 			var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-			return JsonConvert.DeserializeObject<AnnualAverageRatesModel>(
-				await GetAsync(new StringBuilder(AnnualAverageRatesPath)
-					.Append("?year=").Append(year)
-					.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-					.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
-					.Append("&currencyIsoCode=").Append(currencyIsoCode)
-					.Append("&lang=").Append(language)
-					.ToString()));
+			return await GetModel<AnnualAverageRatesModel>(new StringBuilder(AnnualAverageRatesPath)
+				.Append("?year=").Append(year)
+				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
+				.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
+				.Append("&currencyIsoCode=").Append(currencyIsoCode)
+				.Append("&lang=").Append(language)
+				.ToString());
 		}
 
 		/// <summary>
@@ -203,14 +199,13 @@ namespace BIExchangeRates.Client
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<DailyTimeSeriesModel> GetDailyTimeSeries(DateTime startDate, DateTime endDate,
 			string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En) =>
-			JsonConvert.DeserializeObject<DailyTimeSeriesModel>(
-				await GetAsync(new StringBuilder(DailyTimeSeriesPath)
-					.Append("?startDate=").Append(startDate.ToString("yyyy-MM-dd"))
-					.Append("&endDate=").Append(endDate.ToString("yyyy-MM-dd"))
-					.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
-					.Append("&currencyIsoCode=").Append(currencyIsoCode)
-					.Append("&lang=").Append(language)
-					.ToString()));
+			await GetModel<DailyTimeSeriesModel>(new StringBuilder(DailyTimeSeriesPath)
+				.Append("?startDate=").Append(startDate.ToString("yyyy-MM-dd"))
+				.Append("&endDate=").Append(endDate.ToString("yyyy-MM-dd"))
+				.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
+				.Append("&currencyIsoCode=").Append(currencyIsoCode)
+				.Append("&lang=").Append(language)
+				.ToString());
 
 		/// <summary>
 		/// Returns the monthly average exchange rates of a currency for a specific month range.
@@ -226,16 +221,15 @@ namespace BIExchangeRates.Client
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<MonthlyTimeSeriesModel> GetMonthlyTimeSeries(int startMonth, int startYear, int endMonth, int endYear,
 			string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En) =>
-			JsonConvert.DeserializeObject<MonthlyTimeSeriesModel>(
-				await GetAsync(new StringBuilder(MonthlyTimeSeriesPath)
-					.Append("?startMonth=").Append(startMonth)
-					.Append("&startYear=").Append(startYear)
-					.Append("&endMonth=").Append(endMonth)
-					.Append("&endYear=").Append(endYear)
-					.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
-					.Append("&currencyIsoCode=").Append(currencyIsoCode)
-					.Append("&lang=").Append(language)
-					.ToString()));
+			await GetModel<MonthlyTimeSeriesModel>(new StringBuilder(MonthlyTimeSeriesPath)
+				.Append("?startMonth=").Append(startMonth)
+				.Append("&startYear=").Append(startYear)
+				.Append("&endMonth=").Append(endMonth)
+				.Append("&endYear=").Append(endYear)
+				.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
+				.Append("&currencyIsoCode=").Append(currencyIsoCode)
+				.Append("&lang=").Append(language)
+				.ToString());
 
 		/// <summary>
 		/// Returns the annual average exchange rates of a currency for a specific year range.
@@ -249,14 +243,13 @@ namespace BIExchangeRates.Client
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<AnnualTimeSeriesModel> GetAnnualTimeSeries(int startYear, int endYear, string baseCurrencyIsoCode,
 			string currencyIsoCode, Language language = Language.En) =>
-			JsonConvert.DeserializeObject<AnnualTimeSeriesModel>(
-				await GetAsync(new StringBuilder(AnnualTimeSeriesPath)
-					.Append("?startYear=").Append(startYear)
-					.Append("&endYear=").Append(endYear)
-					.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
-					.Append("&currencyIsoCode=").Append(currencyIsoCode)
-					.Append("&lang=").Append(language)
-					.ToString()));
+			await GetModel<AnnualTimeSeriesModel>(new StringBuilder(AnnualTimeSeriesPath)
+				.Append("?startYear=").Append(startYear)
+				.Append("&endYear=").Append(endYear)
+				.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
+				.Append("&currencyIsoCode=").Append(currencyIsoCode)
+				.Append("&lang=").Append(language)
+				.ToString());
 
 		/// <summary>
 		/// Returns the list of all the available currencies.
@@ -265,17 +258,16 @@ namespace BIExchangeRates.Client
 		/// <returns>A task that represents the asynchronous operation. The task result contains the list of all the available currencies.</returns>
 		/// <exception cref="HttpRequestException"></exception>
 		public async Task<CurrenciesModel> GetCurrencies(Language language = Language.En) =>
-			JsonConvert.DeserializeObject<CurrenciesModel>(
-				await GetAsync($"{CurrenciesPath}?lang={language}"));
+			await GetModel<CurrenciesModel>($"{CurrenciesPath}?lang={language}");
 
-		private async Task<string> GetAsync(string requestUri)
+		private async Task<T> GetModel<T>(string requestUri)
 		{
 			var response = await _httpClient.GetAsync(requestUri);
 			var content = await response.Content.ReadAsStringAsync();
 			if (!response.IsSuccessStatusCode)
 				throw new HttpRequestException(
 					$"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}). Response content: {content}");
-			return content;
+			return JsonConvert.DeserializeObject<T>(content);
 		}
 	}
 }
