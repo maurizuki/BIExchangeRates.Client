@@ -31,11 +31,16 @@ namespace BIExchangeRates.Console
     {
         static void Main(string[] args)
         {
-            Parser.Default.ParseArguments<LatestRates, DailyRates, MonthlyAverageRates, AnnualAverageRates>(args)
+            Parser.Default.ParseArguments<LatestRates, DailyRates, MonthlyAverageRates, AnnualAverageRates,
+                DailyTimeSeries, MonthlyTimeSeries, AnnualTimeSeries, Currencies>(args)
                 .WithParsed<LatestRates>(options => LatestRates.Execute(new ExchangeRatesClient()))
                 .WithParsed<DailyRates>(options => DailyRates.Execute(new ExchangeRatesClient(), options))
                 .WithParsed<MonthlyAverageRates>(options => MonthlyAverageRates.Execute(new ExchangeRatesClient(), options))
-                .WithParsed<AnnualAverageRates>(options => AnnualAverageRates.Execute(new ExchangeRatesClient(), options));
+                .WithParsed<AnnualAverageRates>(options => AnnualAverageRates.Execute(new ExchangeRatesClient(), options))
+                .WithParsed<DailyTimeSeries>(options => DailyTimeSeries.Execute(new ExchangeRatesClient(), options))
+                .WithParsed<MonthlyTimeSeries>(options => MonthlyTimeSeries.Execute(new ExchangeRatesClient(), options))
+                .WithParsed<AnnualTimeSeries>(options => AnnualTimeSeries.Execute(new ExchangeRatesClient(), options))
+                .WithParsed<Currencies>(options => Currencies.Execute(new ExchangeRatesClient()));
         }
     }
 }
