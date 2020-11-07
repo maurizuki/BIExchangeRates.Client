@@ -258,7 +258,7 @@ namespace BIExchangeRates.Client
 		private async Task<T> GetModel<T>(string requestUri)
 		{
 			var response = await GetAsync(requestUri);
-			var content = await response.Content.ReadAsStringAsync();
+			var content = response.Content != null ? await response.Content.ReadAsStringAsync() : string.Empty;
 			if (!response.IsSuccessStatusCode)
 				throw new HttpRequestException(
 					$"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}). Response content: {content}");
