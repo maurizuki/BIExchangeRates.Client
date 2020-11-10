@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -33,6 +34,39 @@ namespace BIExchangeRates.Client.Tests
     {
         public static bool TryGetEnum<T>(this NameValueCollection queryParameters, string parameter, bool isRequired,
             out T value, out HttpResponseMessage response) where T : struct
+        {
+            value = default;
+
+            if (!queryParameters.TryGetString(parameter, isRequired, out var stringValue, out response)) return false;
+
+            if (!Enum.TryParse(stringValue, out value))
+            {
+                response = InvalidParameter(parameter, stringValue);
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool TryGetDateTime(this NameValueCollection queryParameters, string parameter, bool isRequired,
+            string format, IFormatProvider provider, DateTimeStyles style,
+            out DateTime value, out HttpResponseMessage response)
+        {
+            value = default;
+
+            if (!queryParameters.TryGetString(parameter, isRequired, out var stringValue, out response)) return false;
+
+            if (!DateTime.TryParseExact(stringValue, format, provider, style, out value))
+            {
+                response = InvalidParameter(parameter, stringValue);
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool TryGetString(this NameValueCollection queryParameters, string parameter, bool isRequired,
+            out string value, out HttpResponseMessage response)
         {
             value = default;
             response = null;
@@ -48,11 +82,29 @@ namespace BIExchangeRates.Client.Tests
                 return true;
             }
 
-            if (!Enum.TryParse(queryParameters[parameter], out value))
+            value = queryParameters[parameter];
+
+            return true;
+        }
+
+        public static bool TryGetStrings(this NameValueCollection queryParameters, string parameter, bool isRequired,
+            out string[] value, out HttpResponseMessage response)
+        {
+            value = default;
+            response = null;
+
+            if (!queryParameters.AllKeys.Contains(parameter))
             {
-                response = InvalidParameter(parameter, queryParameters[parameter]);
-                return false;
+                if (isRequired)
+                {
+                    response = MissingParameter(parameter);
+                    return false;
+                }
+
+                return true;
             }
+
+            value = queryParameters.GetValues(parameter) ?? default;
 
             return true;
         }

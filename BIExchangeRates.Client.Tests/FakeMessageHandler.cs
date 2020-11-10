@@ -23,7 +23,10 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -49,6 +52,9 @@ namespace BIExchangeRates.Client.Tests
 
             if (isEndpoint(HttpMethod.Get, "latestRates"))
                 return await Task.FromResult(GetLatestRates(queryParameters));
+
+            if (isEndpoint(HttpMethod.Get, "dailyRates"))
+                return await Task.FromResult(GetDailyRates(queryParameters));
 
             return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)
             {
@@ -105,6 +111,88 @@ namespace BIExchangeRates.Client.Tests
                             : "Foreign currency amount for 1 Euro"
                     },
                     LatestRates = rates
+                }))
+            };
+            return response;
+        }
+
+        private HttpResponseMessage GetDailyRates(NameValueCollection queryParameters)
+        {
+            if (!queryParameters.TryGetDateTime("referenceDate", true, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out var referenceDate, out var response))
+                return response;
+            
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response)) 
+                return response;
+
+            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response)) 
+                return response;
+
+            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response)) 
+                return response;
+
+            var rates = new List<object>();
+
+            if (currencyIsoCode == "EUR")
+            {
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("USD"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "U.S. Dollar",
+                        Country = "UNITED STATES",
+                        IsoCode = "USD",
+                        UicCode = "001",
+                        AvgRate = 1.1652,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        ReferenceDate = referenceDate
+                    });
+                }
+
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("GBP"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "Pound Sterling",
+                        Country = "UNITED KINGDOM",
+                        IsoCode = "GBP",
+                        UicCode = "002",
+                        AvgRate = 0.89183,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        ReferenceDate = referenceDate
+                    });
+                }
+
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("CHF"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "Swiss Franc",
+                        Country = "SWITZERLAND",
+                        IsoCode = "CHF",
+                        UicCode = "003",
+                        AvgRate = 1.0817,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        ReferenceDate = referenceDate
+                    });
+                }
+            }
+
+            response = new HttpResponseMessage()
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(new
+                {
+                    ResultsInfo = new
+                    {
+                        TotalRecords = rates.Count,
+                        TimezoneReference = lang == Language.It
+                            ? "Le date sono riferite al fuso orario dell'Europa Centrale"
+                            : "Dates refer to the Central European Time Zone"
+                    },
+                    Rates = rates
                 }))
             };
             return response;

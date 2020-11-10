@@ -24,7 +24,7 @@
 using BIExchangeRates.Client.Data;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -42,7 +42,7 @@ namespace BIExchangeRates.Client.Tests
         [Fact(DisplayName = "GetLatestRates(Language)")]
         public async Task GetLatestRates()
         {
-            var rates = new List<LatestRatesModel.ExchangeRateModel>
+            var rates = new LatestRatesModel.ExchangeRateModel[]
             {
                 new LatestRatesModel.ExchangeRateModel
                 {
@@ -74,7 +74,7 @@ namespace BIExchangeRates.Client.Tests
             {
                 ResultsInfo = new LatestRatesModel.ResultsInfoModel
                 {
-                    TotalRecords = rates.Count,
+                    TotalRecords = rates.Length,
                     TimezoneReference = "Dates refer to the Central European Time Zone",
                     Notice = "Foreign currency amount for 1 Euro"
                 },
@@ -82,6 +82,109 @@ namespace BIExchangeRates.Client.Tests
             };
 
             var actual = await _client.GetLatestRates();
+
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
+        }
+
+        [Fact(DisplayName = "GetDailyRates(DateTime, String, Language)")]
+        public async Task GetDailyRates()
+        {
+            var referenceDate = new DateTime(2020, 12, 31);
+
+            var rates = new DailyRatesModel.ExchangeRateModel[]
+            {
+                new DailyRatesModel.ExchangeRateModel
+                {
+                    Currency = "U.S. Dollar",
+                    Country = "UNITED STATES",
+                    IsoCode = "USD",
+                    UicCode = "001",
+                    AvgRate = 1.1652,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    ReferenceDate = referenceDate
+                },
+                new DailyRatesModel.ExchangeRateModel
+                {
+                    Currency = "Pound Sterling",
+                    Country = "UNITED KINGDOM",
+                    IsoCode = "GBP",
+                    UicCode = "002",
+                    AvgRate = 0.89183,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    ReferenceDate = referenceDate
+                },
+                new DailyRatesModel.ExchangeRateModel
+                {
+                    Currency = "Swiss Franc",
+                    Country = "SWITZERLAND",
+                    IsoCode = "CHF",
+                    UicCode = "003",
+                    AvgRate = 1.0817,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    ReferenceDate = referenceDate
+                }
+            };
+
+            var expected = new DailyRatesModel
+            {
+                ResultsInfo = new DailyRatesModel.ResultsInfoModel
+                {
+                    TotalRecords = rates.Length,
+                    TimezoneReference = "Dates refer to the Central European Time Zone"
+                },
+                Rates = rates
+            };
+
+            var actual = await _client.GetDailyRates(referenceDate, "EUR");
+
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
+        }
+
+        [Fact(DisplayName = "GetDailyRates(DateTime, IEnumerable<String>, String, Language)")]
+        public async Task GetDailyRates2()
+        {
+            var referenceDate = new DateTime(2020, 12, 31);
+
+            var rates = new DailyRatesModel.ExchangeRateModel[]
+            {
+                new DailyRatesModel.ExchangeRateModel
+                {
+                    Currency = "U.S. Dollar",
+                    Country = "UNITED STATES",
+                    IsoCode = "USD",
+                    UicCode = "001",
+                    AvgRate = 1.1652,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    ReferenceDate = referenceDate
+                },
+                new DailyRatesModel.ExchangeRateModel
+                {
+                    Currency = "Pound Sterling",
+                    Country = "UNITED KINGDOM",
+                    IsoCode = "GBP",
+                    UicCode = "002",
+                    AvgRate = 0.89183,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    ReferenceDate = referenceDate
+                }
+            };
+
+            var expected = new DailyRatesModel
+            {
+                ResultsInfo = new DailyRatesModel.ResultsInfoModel
+                {
+                    TotalRecords = rates.Length,
+                    TimezoneReference = "Dates refer to the Central European Time Zone"
+                },
+                Rates = rates
+            };
+
+            var actual = await _client.GetDailyRates(referenceDate, rates.Select(a => a.IsoCode), "EUR");
 
             Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
