@@ -32,6 +32,22 @@ namespace BIExchangeRates.Client.Tests
 {
     static class NameValueCollectionExtensions
     {
+        public static bool TryGetInt(this NameValueCollection queryParameters, string parameter, bool isRequired,
+            out int value, out HttpResponseMessage response)
+        {
+            value = default;
+
+            if (!queryParameters.TryGetString(parameter, isRequired, out var stringValue, out response)) return false;
+
+            if (!int.TryParse(stringValue, out value))
+            {
+                response = InvalidParameter(parameter, stringValue);
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool TryGetEnum<T>(this NameValueCollection queryParameters, string parameter, bool isRequired,
             out T value, out HttpResponseMessage response) where T : struct
         {

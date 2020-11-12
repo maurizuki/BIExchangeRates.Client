@@ -56,6 +56,9 @@ namespace BIExchangeRates.Client.Tests
             if (isEndpoint(HttpMethod.Get, "dailyRates"))
                 return await Task.FromResult(GetDailyRates(queryParameters));
 
+            if (isEndpoint(HttpMethod.Get, "monthlyAverageRates"))
+                return await Task.FromResult(GetMonthlyAverageRates(queryParameters));
+
             return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)
             {
                 Content = new StringContent($"Requested resource non found ({request.Method} {request.RequestUri}).")
@@ -146,7 +149,7 @@ namespace BIExchangeRates.Client.Tests
                         AvgRate = 1.1652,
                         ExchangeConvention = "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
-                        ReferenceDate = referenceDate
+                        ReferenceDate = referenceDate.ToString("yyyy-MM-dd")
                     });
                 }
 
@@ -161,7 +164,7 @@ namespace BIExchangeRates.Client.Tests
                         AvgRate = 0.89183,
                         ExchangeConvention = "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
-                        ReferenceDate = referenceDate
+                        ReferenceDate = referenceDate.ToString("yyyy-MM-dd")
                     });
                 }
 
@@ -176,7 +179,7 @@ namespace BIExchangeRates.Client.Tests
                         AvgRate = 1.0817,
                         ExchangeConvention = "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
-                        ReferenceDate = referenceDate
+                        ReferenceDate = referenceDate.ToString("yyyy-MM-dd")
                     });
                 }
             }
@@ -191,6 +194,90 @@ namespace BIExchangeRates.Client.Tests
                         TimezoneReference = lang == Language.It
                             ? "Le date sono riferite al fuso orario dell'Europa Centrale"
                             : "Dates refer to the Central European Time Zone"
+                    },
+                    Rates = rates
+                }))
+            };
+            return response;
+        }
+
+        private HttpResponseMessage GetMonthlyAverageRates(NameValueCollection queryParameters)
+        {
+            if (!queryParameters.TryGetString("month", true, out var month, out var response))
+                return response;
+
+            if (!queryParameters.TryGetString("year", true, out var year, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
+                return response;
+
+            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
+                return response;
+
+            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
+                return response;
+
+            var rates = new List<object>();
+
+            if (currencyIsoCode == "EUR")
+            {
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("USD"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "U.S. Dollar",
+                        Country = "UNITED STATES",
+                        IsoCode = "USD",
+                        UicCode = "001",
+                        AvgRate = 1.1652,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        Year = year,
+                        Month = month
+                    });
+                }
+
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("GBP"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "Pound Sterling",
+                        Country = "UNITED KINGDOM",
+                        IsoCode = "GBP",
+                        UicCode = "002",
+                        AvgRate = 0.89183,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        Year = year,
+                        Month = month
+                    });
+                }
+
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("CHF"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "Swiss Franc",
+                        Country = "SWITZERLAND",
+                        IsoCode = "CHF",
+                        UicCode = "003",
+                        AvgRate = 1.0817,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        Year = year,
+                        Month = month
+                    });
+                }
+            }
+
+            response = new HttpResponseMessage()
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(new
+                {
+                    ResultsInfo = new 
+                    {
+                        TotalRecords = rates.Count
                     },
                     Rates = rates
                 }))
