@@ -5,4 +5,14 @@
 
 A .NET wrapper for the REST API of the currency exchange rates of [Banca d'Italia](https://tassidicambio.bancaditalia.it) (the central bank of Italy).
 
-[BIExchangeRates.Client 1.0 Reference](https://github.com/maurizuki/BIExchangeRates.Client/wiki/BIExchangeRates.Client-1.0)
+## Getting started
+
+To start using BIExchangeRates.Client in your project, install the package with the NuGet Package Manager:
+
+```PowerShell
+PM> Install-Package BIExchangeRates.Client
+```
+
+## Documentation
+
+* [BIExchangeRates.Client 1.0 Reference](https://github.com/maurizuki/BIExchangeRates.Client/wiki/BIExchangeRates.Client-1.0)
