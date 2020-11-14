@@ -296,5 +296,106 @@ namespace BIExchangeRates.Client.Tests
 
             Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
+
+        [Fact(DisplayName = "GetAnnualAverageRates(Int32, String, Language)")]
+        public async Task GetAnnualAverageRates()
+        {
+            var year = 2020;
+
+            var rates = new AnnualAverageRatesModel.ExchangeRateModel[]
+            {
+                new AnnualAverageRatesModel.ExchangeRateModel
+                {
+                    Currency = "U.S. Dollar",
+                    Country = "UNITED STATES",
+                    IsoCode = "USD",
+                    UicCode = "001",
+                    AvgRate = 1.1652,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    Year = year
+                },
+                new AnnualAverageRatesModel.ExchangeRateModel
+                {
+                    Currency = "Pound Sterling",
+                    Country = "UNITED KINGDOM",
+                    IsoCode = "GBP",
+                    UicCode = "002",
+                    AvgRate = 0.89183,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    Year = year
+                },
+                new AnnualAverageRatesModel.ExchangeRateModel
+                {
+                    Currency = "Swiss Franc",
+                    Country = "SWITZERLAND",
+                    IsoCode = "CHF",
+                    UicCode = "003",
+                    AvgRate = 1.0817,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    Year = year
+                }
+            };
+
+            var expected = new AnnualAverageRatesModel
+            {
+                ResultsInfo = new AnnualAverageRatesModel.ResultsInfoModel
+                {
+                    TotalRecords = rates.Length
+                },
+                Rates = rates
+            };
+
+            var actual = await _client.GetAnnualAverageRates(year, "EUR");
+
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
+        }
+
+        [Fact(DisplayName = "GetAnnualAverageRates(Int32, IEnumerable<String>, String, Language)")]
+        public async Task GetAnnualAverageRates2()
+        {
+            var year = 2020;
+
+            var rates = new AnnualAverageRatesModel.ExchangeRateModel[]
+            {
+                new AnnualAverageRatesModel.ExchangeRateModel
+                {
+                    Currency = "U.S. Dollar",
+                    Country = "UNITED STATES",
+                    IsoCode = "USD",
+                    UicCode = "001",
+                    AvgRate = 1.1652,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    Year = year
+                },
+                new AnnualAverageRatesModel.ExchangeRateModel
+                {
+                    Currency = "Pound Sterling",
+                    Country = "UNITED KINGDOM",
+                    IsoCode = "GBP",
+                    UicCode = "002",
+                    AvgRate = 0.89183,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                    ExchangeConventionCode = "C",
+                    Year = year
+                }
+            };
+
+            var expected = new AnnualAverageRatesModel
+            {
+                ResultsInfo = new AnnualAverageRatesModel.ResultsInfoModel
+                {
+                    TotalRecords = rates.Length
+                },
+                Rates = rates
+            };
+
+            var actual = await _client.GetAnnualAverageRates(year, rates.Select(a => a.IsoCode), "EUR");
+
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
+        }
     }
 }

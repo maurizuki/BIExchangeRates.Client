@@ -59,6 +59,9 @@ namespace BIExchangeRates.Client.Tests
             if (isEndpoint(HttpMethod.Get, "monthlyAverageRates"))
                 return await Task.FromResult(GetMonthlyAverageRates(queryParameters));
 
+            if (isEndpoint(HttpMethod.Get, "annualAverageRates"))
+                return await Task.FromResult(GetAnnualAverageRates(queryParameters));
+
             return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)
             {
                 Content = new StringContent($"Requested resource non found ({request.Method} {request.RequestUri}).")
@@ -276,6 +279,84 @@ namespace BIExchangeRates.Client.Tests
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
                     ResultsInfo = new 
+                    {
+                        TotalRecords = rates.Count
+                    },
+                    Rates = rates
+                }))
+            };
+            return response;
+        }
+
+        private HttpResponseMessage GetAnnualAverageRates(NameValueCollection queryParameters)
+        {
+            if (!queryParameters.TryGetString("year", true, out var year, out var response))
+                return response;
+
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
+                return response;
+
+            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
+                return response;
+
+            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
+                return response;
+
+            var rates = new List<object>();
+
+            if (currencyIsoCode == "EUR")
+            {
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("USD"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "U.S. Dollar",
+                        Country = "UNITED STATES",
+                        IsoCode = "USD",
+                        UicCode = "001",
+                        AvgRate = 1.1652,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        Year = year
+                    });
+                }
+
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("GBP"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "Pound Sterling",
+                        Country = "UNITED KINGDOM",
+                        IsoCode = "GBP",
+                        UicCode = "002",
+                        AvgRate = 0.89183,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        Year = year
+                    });
+                }
+
+                if (baseCurrencyIsoCodes == default || baseCurrencyIsoCodes.Contains("CHF"))
+                {
+                    rates.Add(new
+                    {
+                        Currency = "Swiss Franc",
+                        Country = "SWITZERLAND",
+                        IsoCode = "CHF",
+                        UicCode = "003",
+                        AvgRate = 1.0817,
+                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConventionCode = "C",
+                        Year = year
+                    });
+                }
+            }
+
+            response = new HttpResponseMessage()
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(new
+                {
+                    ResultsInfo = new
                     {
                         TotalRecords = rates.Count
                     },
