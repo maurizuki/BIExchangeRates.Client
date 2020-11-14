@@ -13,6 +13,8 @@ To start using BIExchangeRates.Client in your project, install the package with 
 PM> Install-Package BIExchangeRates.Client
 ```
 
+The console application BIExchangeRates.Console is intended as an example on how to use the REST API wrapper in a real scenario.
+
 ## Documentation
 
 * [BIExchangeRates.Client 1.0 Reference](https://github.com/maurizuki/BIExchangeRates.Client/wiki/BIExchangeRates.Client-1.0)
