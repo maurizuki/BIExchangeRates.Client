@@ -62,6 +62,9 @@ namespace BIExchangeRates.Client.Tests
             if (isEndpoint(HttpMethod.Get, "annualAverageRates"))
                 return await Task.FromResult(GetAnnualAverageRates(queryParameters));
 
+            if (isEndpoint(HttpMethod.Get, "dailyTimeSeries"))
+                return await Task.FromResult(GetDailyTimeSeries(queryParameters));
+
             return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)
             {
                 Content = new StringContent($"Requested resource non found ({request.Method} {request.RequestUri}).")
@@ -127,11 +130,11 @@ namespace BIExchangeRates.Client.Tests
             if (!queryParameters.TryGetDateTime("referenceDate", true, "yyyy-MM-dd", CultureInfo.InvariantCulture,
                 DateTimeStyles.None, out var referenceDate, out var response))
                 return response;
-            
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response)) 
+
+            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
                 return response;
 
-            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response)) 
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response)) 
                 return response;
 
             if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response)) 
@@ -212,10 +215,10 @@ namespace BIExchangeRates.Client.Tests
             if (!queryParameters.TryGetString("year", true, out var year, out response))
                 return response;
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
+            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
                 return response;
 
-            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
                 return response;
 
             if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
@@ -293,10 +296,10 @@ namespace BIExchangeRates.Client.Tests
             if (!queryParameters.TryGetString("year", true, out var year, out var response))
                 return response;
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
+            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
                 return response;
 
-            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
                 return response;
 
             if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
@@ -359,6 +362,69 @@ namespace BIExchangeRates.Client.Tests
                     ResultsInfo = new
                     {
                         TotalRecords = rates.Count
+                    },
+                    Rates = rates
+                }))
+            };
+            return response;
+        }
+
+        private HttpResponseMessage GetDailyTimeSeries(NameValueCollection queryParameters)
+        {
+            if (!queryParameters.TryGetDateTime("startDate", true, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out var startDate, out var response))
+                return response;
+
+            if (!queryParameters.TryGetDateTime("endDate", true, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out var endDate, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("baseCurrencyIsoCode", true, out var baseCurrencyIsoCode, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
+                return response;
+
+            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
+                return response;
+
+            var rates = new List<object>();
+
+            if (baseCurrencyIsoCode == "USD" && currencyIsoCode == "EUR")
+            {
+                rates.Add(new
+                {
+                    ReferenceDate = startDate.ToString("yyyy-MM-dd"),
+                    AvgRate = 1.1652,
+                    ExchangeConvention = lang == Language.It
+                        ? "Quantita' di valuta estera per 1 Euro"
+                        : "Foreign currency amount for 1 Euro"
+                });
+                
+                rates.Add(new
+                {
+                    ReferenceDate = endDate.ToString("yyyy-MM-dd"),
+                    AvgRate = 1.1625,
+                    ExchangeConvention = lang == Language.It
+                        ? "Quantita' di valuta estera per 1 Euro"
+                        : "Foreign currency amount for 1 Euro"
+                });
+            }
+
+            response = new HttpResponseMessage()
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(new
+                {
+                    ResultsInfo = new
+                    {
+                        TotalRecords = rates.Count,
+                        TimezoneReference = lang == Language.It
+                            ? "Le date sono riferite al fuso orario dell'Europa Centrale"
+                            : "Dates refer to the Central European Time Zone",
+                        Currency = "U.S. Dollar",
+                        IsoCode = "USD",
+                        UicCode = "001",
+                        ExchangeConventionCode = "C"
                     },
                     Rates = rates
                 }))

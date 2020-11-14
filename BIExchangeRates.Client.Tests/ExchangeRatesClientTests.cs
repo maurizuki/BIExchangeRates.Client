@@ -397,5 +397,46 @@ namespace BIExchangeRates.Client.Tests
 
             Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
+
+        [Fact(DisplayName = "GetDailyTimeSeries(DateTime, DateTime, String, String, Language)")]
+        public async Task GetDailyTimeSeries()
+        {
+            var startDate = new DateTime(2020, 12, 30);
+            var endDate = new DateTime(2020, 12, 31);
+
+            var rates = new DailyTimeSeriesModel.ExchangeRateModel[]
+            {
+                new DailyTimeSeriesModel.ExchangeRateModel
+                {
+                    ReferenceDate = startDate,
+                    AvgRate = 1.1652,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                },
+                new DailyTimeSeriesModel.ExchangeRateModel
+                {
+                    ReferenceDate = endDate,
+                    AvgRate = 1.1625,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                }
+            };
+
+            var expected = new DailyTimeSeriesModel
+            {
+                ResultsInfo = new DailyTimeSeriesModel.ResultsInfoModel
+                {
+                    TotalRecords = rates.Length,
+                    TimezoneReference = "Dates refer to the Central European Time Zone",
+                    Currency = "U.S. Dollar",
+                    IsoCode = "USD",
+                    UicCode = "001",
+                    ExchangeConventionCode = "C"
+                },
+                Rates = rates
+            };
+
+            var actual = await _client.GetDailyTimeSeries(startDate, endDate, "USD", "EUR");
+
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
+        }
     }
 }
