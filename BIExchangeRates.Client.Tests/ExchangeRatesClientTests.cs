@@ -438,5 +438,87 @@ namespace BIExchangeRates.Client.Tests
 
             Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
+
+        [Fact(DisplayName = "GetMonthlyTimeSeries(Int32, Int32, Int32, Int32, String, String, Language)")]
+        public async Task GetMonthlyTimeSeries()
+        {
+            var startMonth = 1;
+            var startYear = 2019;
+            var endMonth = 12;
+            var endYear = 2020;
+
+            var rates = new MonthlyTimeSeriesModel.ExchangeRateModel[]
+            {
+                new MonthlyTimeSeriesModel.ExchangeRateModel
+                {
+                    ReferenceDate = new DateTime(startYear, startMonth, 1),
+                    AvgRate = 1.1652,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                },
+                new MonthlyTimeSeriesModel.ExchangeRateModel
+                {
+                    ReferenceDate = new DateTime(endYear, endMonth, 1),
+                    AvgRate = 1.1625,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                }
+            };
+
+            var expected = new MonthlyTimeSeriesModel
+            {
+                ResultsInfo = new MonthlyTimeSeriesModel.ResultsInfoModel
+                {
+                    TotalRecords = rates.Length,
+                    Currency = "U.S. Dollar",
+                    IsoCode = "USD",
+                    UicCode = "001",
+                    ExchangeConventionCode = "C"
+                },
+                Rates = rates
+            };
+
+            var actual = await _client.GetMonthlyTimeSeries(startMonth, startYear, endMonth, endYear, "USD", "EUR");
+
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
+        }
+
+        [Fact(DisplayName = "GetAnnualTimeSeries(Int32, Int32, String, String, Language)")]
+        public async Task GetAnnualTimeSeries()
+        {
+            var startYear = 2019;
+            var endYear = 2020;
+
+            var rates = new AnnualTimeSeriesModel.ExchangeRateModel[]
+            {
+                new AnnualTimeSeriesModel.ExchangeRateModel
+                {
+                    ReferenceDate = startYear,
+                    AvgRate = 1.1652,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                },
+                new AnnualTimeSeriesModel.ExchangeRateModel
+                {
+                    ReferenceDate = endYear,
+                    AvgRate = 1.1625,
+                    ExchangeConvention = "Foreign currency amount for 1 Euro",
+                }
+            };
+
+            var expected = new AnnualTimeSeriesModel
+            {
+                ResultsInfo = new AnnualTimeSeriesModel.ResultsInfoModel
+                {
+                    TotalRecords = rates.Length,
+                    Currency = "U.S. Dollar",
+                    IsoCode = "USD",
+                    UicCode = "001",
+                    ExchangeConventionCode = "C"
+                },
+                Rates = rates
+            };
+
+            var actual = await _client.GetAnnualTimeSeries(startYear, endYear, "USD", "EUR");
+
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
+        }
     }
 }

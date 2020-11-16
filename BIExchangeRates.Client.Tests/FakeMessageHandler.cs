@@ -65,6 +65,12 @@ namespace BIExchangeRates.Client.Tests
             if (isEndpoint(HttpMethod.Get, "dailyTimeSeries"))
                 return await Task.FromResult(GetDailyTimeSeries(queryParameters));
 
+            if (isEndpoint(HttpMethod.Get, "monthlyTimeSeries"))
+                return await Task.FromResult(GetMonthlyTimeSeries(queryParameters));
+
+            if (isEndpoint(HttpMethod.Get, "annualTimeSeries"))
+                return await Task.FromResult(GetAnnualTimeSeries(queryParameters));
+
             return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)
             {
                 Content = new StringContent($"Requested resource non found ({request.Method} {request.RequestUri}).")
@@ -421,6 +427,128 @@ namespace BIExchangeRates.Client.Tests
                         TimezoneReference = lang == Language.It
                             ? "Le date sono riferite al fuso orario dell'Europa Centrale"
                             : "Dates refer to the Central European Time Zone",
+                        Currency = "U.S. Dollar",
+                        IsoCode = "USD",
+                        UicCode = "001",
+                        ExchangeConventionCode = "C"
+                    },
+                    Rates = rates
+                }))
+            };
+            return response;
+        }
+
+        private HttpResponseMessage GetMonthlyTimeSeries(NameValueCollection queryParameters)
+        {
+            if (!queryParameters.TryGetString("startMonth", true, out var startMonth, out var response))
+                return response;
+
+            if (!queryParameters.TryGetString("startYear", true, out var startYear, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("endMonth", true, out var endMonth, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("endYear", true, out var endYear, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("baseCurrencyIsoCode", true, out var baseCurrencyIsoCode, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
+                return response;
+
+            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
+                return response;
+
+            var rates = new List<object>();
+
+            if (baseCurrencyIsoCode == "USD" && currencyIsoCode == "EUR")
+            {
+                rates.Add(new
+                {
+                    ReferenceDate = $"{startYear}-{startMonth}",
+                    AvgRate = 1.1652,
+                    ExchangeConvention = lang == Language.It
+                        ? "Quantita' di valuta estera per 1 Euro"
+                        : "Foreign currency amount for 1 Euro"
+                });
+
+                rates.Add(new
+                {
+                    ReferenceDate = $"{endYear}-{endMonth}",
+                    AvgRate = 1.1625,
+                    ExchangeConvention = lang == Language.It
+                        ? "Quantita' di valuta estera per 1 Euro"
+                        : "Foreign currency amount for 1 Euro"
+                });
+            }
+
+            response = new HttpResponseMessage()
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(new
+                {
+                    ResultsInfo = new
+                    {
+                        TotalRecords = rates.Count,
+                        Currency = "U.S. Dollar",
+                        IsoCode = "USD",
+                        UicCode = "001",
+                        ExchangeConventionCode = "C"
+                    },
+                    Rates = rates
+                }))
+            };
+            return response;
+        }
+
+        private HttpResponseMessage GetAnnualTimeSeries(NameValueCollection queryParameters)
+        {
+            if (!queryParameters.TryGetString("startYear", true, out var startYear, out var response))
+                return response;
+
+            if (!queryParameters.TryGetString("endYear", true, out var endYear, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("baseCurrencyIsoCode", true, out var baseCurrencyIsoCode, out response))
+                return response;
+
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
+                return response;
+
+            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
+                return response;
+
+            var rates = new List<object>();
+
+            if (baseCurrencyIsoCode == "USD" && currencyIsoCode == "EUR")
+            {
+                rates.Add(new
+                {
+                    ReferenceDate = startYear,
+                    AvgRate = 1.1652,
+                    ExchangeConvention = lang == Language.It
+                        ? "Quantita' di valuta estera per 1 Euro"
+                        : "Foreign currency amount for 1 Euro"
+                });
+
+                rates.Add(new
+                {
+                    ReferenceDate = endYear,
+                    AvgRate = 1.1625,
+                    ExchangeConvention = lang == Language.It
+                        ? "Quantita' di valuta estera per 1 Euro"
+                        : "Foreign currency amount for 1 Euro"
+                });
+            }
+
+            response = new HttpResponseMessage()
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(new
+                {
+                    ResultsInfo = new
+                    {
+                        TotalRecords = rates.Count,
                         Currency = "U.S. Dollar",
                         IsoCode = "USD",
                         UicCode = "001",
