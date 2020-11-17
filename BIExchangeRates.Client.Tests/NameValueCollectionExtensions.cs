@@ -36,12 +36,22 @@ namespace BIExchangeRates.Client.Tests
             out int value, out HttpResponseMessage response)
         {
             value = default;
+            response = null;
 
-            if (!queryParameters.TryGetString(parameter, isRequired, out var stringValue, out response)) return false;
-
-            if (!int.TryParse(stringValue, out value))
+            if (!queryParameters.AllKeys.Contains(parameter))
             {
-                response = InvalidParameter(parameter, stringValue);
+                if (isRequired)
+                {
+                    response = MissingParameter(parameter);
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (!int.TryParse(queryParameters[parameter], out value))
+            {
+                response = InvalidParameter(parameter, queryParameters[parameter]);
                 return false;
             }
 
@@ -52,12 +62,22 @@ namespace BIExchangeRates.Client.Tests
             out T value, out HttpResponseMessage response) where T : struct
         {
             value = default;
+            response = null;
 
-            if (!queryParameters.TryGetString(parameter, isRequired, out var stringValue, out response)) return false;
-
-            if (!Enum.TryParse(stringValue, out value))
+            if (!queryParameters.AllKeys.Contains(parameter))
             {
-                response = InvalidParameter(parameter, stringValue);
+                if (isRequired)
+                {
+                    response = MissingParameter(parameter);
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (!Enum.TryParse(queryParameters[parameter], out value))
+            {
+                response = InvalidParameter(parameter, queryParameters[parameter]);
                 return false;
             }
 
@@ -69,12 +89,22 @@ namespace BIExchangeRates.Client.Tests
             out DateTime value, out HttpResponseMessage response)
         {
             value = default;
+            response = null;
 
-            if (!queryParameters.TryGetString(parameter, isRequired, out var stringValue, out response)) return false;
-
-            if (!DateTime.TryParseExact(stringValue, format, provider, style, out value))
+            if (!queryParameters.AllKeys.Contains(parameter))
             {
-                response = InvalidParameter(parameter, stringValue);
+                if (isRequired)
+                {
+                    response = MissingParameter(parameter);
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (!DateTime.TryParseExact(queryParameters[parameter], format, provider, style, out value))
+            {
+                response = InvalidParameter(parameter, queryParameters[parameter]);
                 return false;
             }
 

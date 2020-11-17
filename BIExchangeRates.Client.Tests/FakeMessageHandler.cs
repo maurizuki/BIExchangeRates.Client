@@ -51,30 +51,33 @@ namespace BIExchangeRates.Client.Tests
                     UriFormat.Unescaped, StringComparison.InvariantCultureIgnoreCase) == 0;
 
             if (isEndpoint(HttpMethod.Get, "latestRates"))
-                return await Task.FromResult(GetLatestRates(queryParameters));
+                return await Task.Run(() => GetLatestRates(queryParameters));
 
             if (isEndpoint(HttpMethod.Get, "dailyRates"))
-                return await Task.FromResult(GetDailyRates(queryParameters));
+                return await Task.Run(() => GetDailyRates(queryParameters));
 
             if (isEndpoint(HttpMethod.Get, "monthlyAverageRates"))
-                return await Task.FromResult(GetMonthlyAverageRates(queryParameters));
+                return await Task.Run(() => GetMonthlyAverageRates(queryParameters));
 
             if (isEndpoint(HttpMethod.Get, "annualAverageRates"))
-                return await Task.FromResult(GetAnnualAverageRates(queryParameters));
+                return await Task.Run(() => GetAnnualAverageRates(queryParameters));
 
             if (isEndpoint(HttpMethod.Get, "dailyTimeSeries"))
-                return await Task.FromResult(GetDailyTimeSeries(queryParameters));
+                return await Task.Run(() => GetDailyTimeSeries(queryParameters));
 
             if (isEndpoint(HttpMethod.Get, "monthlyTimeSeries"))
-                return await Task.FromResult(GetMonthlyTimeSeries(queryParameters));
+                return await Task.Run(() => GetMonthlyTimeSeries(queryParameters));
 
             if (isEndpoint(HttpMethod.Get, "annualTimeSeries"))
-                return await Task.FromResult(GetAnnualTimeSeries(queryParameters));
+                return await Task.Run(() => GetAnnualTimeSeries(queryParameters));
 
-            return await Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)
+            if (isEndpoint(HttpMethod.Get, "currencies"))
+                return await Task.Run(() => GetCurrencies(queryParameters));
+
+            return new HttpResponseMessage(HttpStatusCode.NotFound)
             {
                 Content = new StringContent($"Requested resource non found ({request.Method} {request.RequestUri}).")
-            });
+            };
         }
 
         private HttpResponseMessage GetLatestRates(NameValueCollection queryParameters)
@@ -140,7 +143,7 @@ namespace BIExchangeRates.Client.Tests
             if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
                 return response;
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response)) 
+            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
                 return response;
 
             if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response)) 
@@ -215,10 +218,10 @@ namespace BIExchangeRates.Client.Tests
 
         private HttpResponseMessage GetMonthlyAverageRates(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetString("month", true, out var month, out var response))
+            if (!queryParameters.TryGetInt("month", true, out var month, out var response))
                 return response;
 
-            if (!queryParameters.TryGetString("year", true, out var year, out response))
+            if (!queryParameters.TryGetInt("year", true, out var year, out response))
                 return response;
 
             if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
@@ -299,7 +302,7 @@ namespace BIExchangeRates.Client.Tests
 
         private HttpResponseMessage GetAnnualAverageRates(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetString("year", true, out var year, out var response))
+            if (!queryParameters.TryGetInt("year", true, out var year, out var response))
                 return response;
 
             if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
@@ -440,16 +443,16 @@ namespace BIExchangeRates.Client.Tests
 
         private HttpResponseMessage GetMonthlyTimeSeries(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetString("startMonth", true, out var startMonth, out var response))
+            if (!queryParameters.TryGetInt("startMonth", true, out var startMonth, out var response))
                 return response;
 
-            if (!queryParameters.TryGetString("startYear", true, out var startYear, out response))
+            if (!queryParameters.TryGetInt("startYear", true, out var startYear, out response))
                 return response;
 
-            if (!queryParameters.TryGetString("endMonth", true, out var endMonth, out response))
+            if (!queryParameters.TryGetInt("endMonth", true, out var endMonth, out response))
                 return response;
 
-            if (!queryParameters.TryGetString("endYear", true, out var endYear, out response))
+            if (!queryParameters.TryGetInt("endYear", true, out var endYear, out response))
                 return response;
 
             if (!queryParameters.TryGetString("baseCurrencyIsoCode", true, out var baseCurrencyIsoCode, out response))
@@ -504,10 +507,10 @@ namespace BIExchangeRates.Client.Tests
 
         private HttpResponseMessage GetAnnualTimeSeries(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetString("startYear", true, out var startYear, out var response))
+            if (!queryParameters.TryGetInt("startYear", true, out var startYear, out var response))
                 return response;
 
-            if (!queryParameters.TryGetString("endYear", true, out var endYear, out response))
+            if (!queryParameters.TryGetInt("endYear", true, out var endYear, out response))
                 return response;
 
             if (!queryParameters.TryGetString("baseCurrencyIsoCode", true, out var baseCurrencyIsoCode, out response))
@@ -555,6 +558,82 @@ namespace BIExchangeRates.Client.Tests
                         ExchangeConventionCode = "C"
                     },
                     Rates = rates
+                }))
+            };
+            return response;
+        }
+
+        private HttpResponseMessage GetCurrencies(NameValueCollection queryParameters)
+        {
+            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out var response)) return response;
+
+            var currencies = new object[]
+            {
+                new
+                {
+                    Countries = new object[]
+                    {
+                        new
+                        {
+                            CurrencyIso = "USD",
+                            Country = "UNITED STATES",
+                            CountryIso = "US",
+                            ValidityStartDate = "1918-01-02",
+                            ValidityEndDate = (string)null
+                        }
+                    },
+                    IsoCode = "USD",
+                    Name = "U.S. Dollar",
+                    Graph = false
+                },
+                new
+                {
+                    Countries = new object[]
+                    {
+                        new
+                        {
+                            CurrencyIso = "EUR",
+                            Country = "EUROPEAN MONETARY UNION",
+                            CountryIso = "XX",
+                            ValidityStartDate = "1999-01-01",
+                            ValidityEndDate = (string)null
+                        }
+                    },
+                    IsoCode = "EUR",
+                    Name = "Euro",
+                    Graph = false
+                },
+                new
+                {
+                    Countries = new object[]
+                    {
+                        new
+                        {
+                            CurrencyIso = "ITL",
+                            Country = "ITALY",
+                            CountryIso = "IT",
+                            ValidityStartDate = "1918-02-01",
+                            ValidityEndDate = "2001-12-28",
+                        }
+                    },
+                    IsoCode = "ITL",
+                    Name = "Italian Lira",
+                    Graph = false
+                }
+            };
+
+            response = new HttpResponseMessage()
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(new
+                {
+                    ResultsInfo = new
+                    {
+                        TotalRecords = currencies.Length,
+                        TimezoneReference = lang == Language.It
+                            ? "Le date sono riferite al fuso orario dell'Europa Centrale"
+                            : "Dates refer to the Central European Time Zone"
+                    },
+                    Currencies = currencies
                 }))
             };
             return response;

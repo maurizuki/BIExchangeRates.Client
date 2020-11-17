@@ -520,5 +520,79 @@ namespace BIExchangeRates.Client.Tests
 
             Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
+
+        [Fact(DisplayName = "GetCurrencies(Language)")]
+        public async Task GetCurrencies()
+        {
+            var currencies = new CurrenciesModel.CurrencyModel[]
+            {
+                new CurrenciesModel.CurrencyModel
+                {
+                    Countries = new CurrenciesModel.CurrencyModel.CountryModel[]
+                    {
+                        new CurrenciesModel.CurrencyModel.CountryModel
+                        {
+                            CurrencyIso = "USD",
+                            Country = "UNITED STATES",
+                            CountryIso = "US",
+                            ValidityStartDate = new DateTime(1918, 1, 2),
+                            ValidityEndDate = null
+                        }
+                    },
+                    IsoCode = "USD",
+                    Name = "U.S. Dollar",
+                    Graph = false
+                },
+                new CurrenciesModel.CurrencyModel
+                {
+                    Countries = new CurrenciesModel.CurrencyModel.CountryModel[]
+                    {
+                        new CurrenciesModel.CurrencyModel.CountryModel
+                        {
+                            CurrencyIso = "EUR",
+                            Country = "EUROPEAN MONETARY UNION",
+                            CountryIso = "XX",
+                            ValidityStartDate = new DateTime(1999, 1, 1),
+                            ValidityEndDate = null
+                        }
+                    },
+                    IsoCode = "EUR",
+                    Name = "Euro",
+                    Graph = false
+                },
+                new CurrenciesModel.CurrencyModel
+                {
+                    Countries = new CurrenciesModel.CurrencyModel.CountryModel[]
+                    {
+                        new CurrenciesModel.CurrencyModel.CountryModel
+                        {
+                            CurrencyIso = "ITL",
+                            Country = "ITALY",
+                            CountryIso = "IT",
+                            ValidityStartDate = new DateTime(1918, 2, 1),
+                            ValidityEndDate = new DateTime(2001, 12, 28),
+                        }
+                    },
+                    IsoCode = "ITL",
+                    Name = "Italian Lira",
+                    Graph = false
+                }
+            };
+
+            var expected = new CurrenciesModel
+            {
+                ResultsInfo = new CurrenciesModel.ResultsInfoModel
+                {
+                    TotalRecords = currencies.Length,
+                    TimezoneReference = "Dates refer to the Central European Time Zone"
+                },
+                Currencies = currencies
+            };
+
+            var actual = await _client.GetCurrencies();
+
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
+        }
+
     }
 }
