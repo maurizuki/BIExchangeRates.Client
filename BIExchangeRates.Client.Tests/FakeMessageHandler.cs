@@ -74,15 +74,12 @@ namespace BIExchangeRates.Client.Tests
             if (isEndpoint(HttpMethod.Get, "currencies"))
                 return await Task.Run(() => GetCurrencies(queryParameters));
 
-            return new HttpResponseMessage(HttpStatusCode.NotFound)
-            {
-                Content = new StringContent($"Requested resource non found ({request.Method} {request.RequestUri}).")
-            };
+            throw new Exception($"Requested resource non found ({request.Method} {request.RequestUri}).");
         }
 
         private HttpResponseMessage GetLatestRates(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out var response)) return response;
+            var lang = queryParameters.GetEnum<Language>("lang", false);
 
             var rates = new object[]
             {
@@ -114,7 +111,7 @@ namespace BIExchangeRates.Client.Tests
                 }
             };
 
-            response = new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
@@ -131,23 +128,18 @@ namespace BIExchangeRates.Client.Tests
                     LatestRates = rates
                 }))
             };
-            return response;
         }
 
         private HttpResponseMessage GetDailyRates(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetDateTime("referenceDate", true, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out var referenceDate, out var response))
-                return response;
+            var referenceDate = queryParameters.GetDateTime("referenceDate", true,
+                "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
-                return response;
+            var baseCurrencyIsoCodes = queryParameters.GetStrings("baseCurrencyIsoCode", false);
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
-                return response;
+            var currencyIsoCode = queryParameters.GetString("currencyIsoCode", true);
 
-            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response)) 
-                return response;
+            var lang = queryParameters.GetEnum<Language>("lang", false);
 
             var rates = new List<object>();
 
@@ -162,7 +154,9 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "USD",
                         UicCode = "001",
                         AvgRate = 1.1652,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         ReferenceDate = referenceDate.ToString("yyyy-MM-dd")
                     });
@@ -177,7 +171,9 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "GBP",
                         UicCode = "002",
                         AvgRate = 0.89183,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         ReferenceDate = referenceDate.ToString("yyyy-MM-dd")
                     });
@@ -192,14 +188,16 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "CHF",
                         UicCode = "003",
                         AvgRate = 1.0817,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         ReferenceDate = referenceDate.ToString("yyyy-MM-dd")
                     });
                 }
             }
 
-            response = new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
@@ -213,25 +211,19 @@ namespace BIExchangeRates.Client.Tests
                     Rates = rates
                 }))
             };
-            return response;
         }
 
         private HttpResponseMessage GetMonthlyAverageRates(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetInt("month", true, out var month, out var response))
-                return response;
+            var month = queryParameters.GetInt("month", true);
 
-            if (!queryParameters.TryGetInt("year", true, out var year, out response))
-                return response;
+            var year = queryParameters.GetInt("year", true);
 
-            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
-                return response;
+            var baseCurrencyIsoCodes = queryParameters.GetStrings("baseCurrencyIsoCode", false);
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
-                return response;
+            var currencyIsoCode = queryParameters.GetString("currencyIsoCode", true);
 
-            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
-                return response;
+            var lang = queryParameters.GetEnum<Language>("lang", false);
 
             var rates = new List<object>();
 
@@ -246,7 +238,9 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "USD",
                         UicCode = "001",
                         AvgRate = 1.1652,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         Year = year,
                         Month = month
@@ -262,7 +256,9 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "GBP",
                         UicCode = "002",
                         AvgRate = 0.89183,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         Year = year,
                         Month = month
@@ -278,7 +274,9 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "CHF",
                         UicCode = "003",
                         AvgRate = 1.0817,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         Year = year,
                         Month = month
@@ -286,7 +284,7 @@ namespace BIExchangeRates.Client.Tests
                 }
             }
 
-            response = new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
@@ -297,22 +295,17 @@ namespace BIExchangeRates.Client.Tests
                     Rates = rates
                 }))
             };
-            return response;
         }
 
         private HttpResponseMessage GetAnnualAverageRates(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetInt("year", true, out var year, out var response))
-                return response;
+            var year = queryParameters.GetInt("year", true);
 
-            if (!queryParameters.TryGetStrings("baseCurrencyIsoCode", false, out var baseCurrencyIsoCodes, out response))
-                return response;
+            var baseCurrencyIsoCodes = queryParameters.GetStrings("baseCurrencyIsoCode", false);
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
-                return response;
+            var currencyIsoCode = queryParameters.GetString("currencyIsoCode", true);
 
-            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
-                return response;
+            var lang = queryParameters.GetEnum<Language>("lang", false);
 
             var rates = new List<object>();
 
@@ -327,7 +320,9 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "USD",
                         UicCode = "001",
                         AvgRate = 1.1652,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         Year = year
                     });
@@ -342,7 +337,9 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "GBP",
                         UicCode = "002",
                         AvgRate = 0.89183,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         Year = year
                     });
@@ -357,14 +354,16 @@ namespace BIExchangeRates.Client.Tests
                         IsoCode = "CHF",
                         UicCode = "003",
                         AvgRate = 1.0817,
-                        ExchangeConvention = "Foreign currency amount for 1 Euro",
+                        ExchangeConvention = lang == Language.It
+                            ? "Quantita' di valuta estera per 1 Euro"
+                            : "Foreign currency amount for 1 Euro",
                         ExchangeConventionCode = "C",
                         Year = year
                     });
                 }
             }
 
-            response = new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
@@ -375,27 +374,21 @@ namespace BIExchangeRates.Client.Tests
                     Rates = rates
                 }))
             };
-            return response;
         }
 
         private HttpResponseMessage GetDailyTimeSeries(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetDateTime("startDate", true, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out var startDate, out var response))
-                return response;
+            var startDate = queryParameters.GetDateTime("startDate", true,
+                "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-            if (!queryParameters.TryGetDateTime("endDate", true, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out var endDate, out response))
-                return response;
+            var endDate = queryParameters.GetDateTime("endDate", true,
+                "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-            if (!queryParameters.TryGetString("baseCurrencyIsoCode", true, out var baseCurrencyIsoCode, out response))
-                return response;
+            var baseCurrencyIsoCode = queryParameters.GetString("baseCurrencyIsoCode", true);
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
-                return response;
+            var currencyIsoCode = queryParameters.GetString("currencyIsoCode", true);
 
-            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
-                return response;
+            var lang = queryParameters.GetEnum<Language>("lang", false);
 
             var rates = new List<object>();
 
@@ -420,7 +413,7 @@ namespace BIExchangeRates.Client.Tests
                 });
             }
 
-            response = new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
@@ -438,31 +431,23 @@ namespace BIExchangeRates.Client.Tests
                     Rates = rates
                 }))
             };
-            return response;
         }
 
         private HttpResponseMessage GetMonthlyTimeSeries(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetInt("startMonth", true, out var startMonth, out var response))
-                return response;
+            var startMonth = queryParameters.GetInt("startMonth", true);
 
-            if (!queryParameters.TryGetInt("startYear", true, out var startYear, out response))
-                return response;
+            var startYear = queryParameters.GetInt("startYear", true);
 
-            if (!queryParameters.TryGetInt("endMonth", true, out var endMonth, out response))
-                return response;
+            var endMonth = queryParameters.GetInt("endMonth", true);
 
-            if (!queryParameters.TryGetInt("endYear", true, out var endYear, out response))
-                return response;
+            var endYear = queryParameters.GetInt("endYear", true);
 
-            if (!queryParameters.TryGetString("baseCurrencyIsoCode", true, out var baseCurrencyIsoCode, out response))
-                return response;
+            var baseCurrencyIsoCode = queryParameters.GetString("baseCurrencyIsoCode", true);
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
-                return response;
+            var currencyIsoCode = queryParameters.GetString("currencyIsoCode", true);
 
-            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
-                return response;
+            var lang = queryParameters.GetEnum<Language>("lang", false);
 
             var rates = new List<object>();
 
@@ -487,7 +472,7 @@ namespace BIExchangeRates.Client.Tests
                 });
             }
 
-            response = new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
@@ -502,25 +487,19 @@ namespace BIExchangeRates.Client.Tests
                     Rates = rates
                 }))
             };
-            return response;
         }
 
         private HttpResponseMessage GetAnnualTimeSeries(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetInt("startYear", true, out var startYear, out var response))
-                return response;
+            var startYear = queryParameters.GetInt("startYear", true);
 
-            if (!queryParameters.TryGetInt("endYear", true, out var endYear, out response))
-                return response;
+            var endYear = queryParameters.GetInt("endYear", true);
 
-            if (!queryParameters.TryGetString("baseCurrencyIsoCode", true, out var baseCurrencyIsoCode, out response))
-                return response;
+            var baseCurrencyIsoCode = queryParameters.GetString("baseCurrencyIsoCode", true);
 
-            if (!queryParameters.TryGetString("currencyIsoCode", true, out var currencyIsoCode, out response))
-                return response;
+            var currencyIsoCode = queryParameters.GetString("currencyIsoCode", true);
 
-            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out response))
-                return response;
+            var lang = queryParameters.GetEnum<Language>("lang", false);
 
             var rates = new List<object>();
 
@@ -545,7 +524,7 @@ namespace BIExchangeRates.Client.Tests
                 });
             }
 
-            response = new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
@@ -560,12 +539,11 @@ namespace BIExchangeRates.Client.Tests
                     Rates = rates
                 }))
             };
-            return response;
         }
 
         private HttpResponseMessage GetCurrencies(NameValueCollection queryParameters)
         {
-            if (!queryParameters.TryGetEnum<Language>("lang", false, out var lang, out var response)) return response;
+            var lang = queryParameters.GetEnum<Language>("lang", false);
 
             var currencies = new object[]
             {
@@ -622,7 +600,7 @@ namespace BIExchangeRates.Client.Tests
                 }
             };
 
-            response = new HttpResponseMessage()
+            return new HttpResponseMessage()
             {
                 Content = new StringContent(JsonConvert.SerializeObject(new
                 {
@@ -636,7 +614,6 @@ namespace BIExchangeRates.Client.Tests
                     Currencies = currencies
                 }))
             };
-            return response;
         }
     }
 }

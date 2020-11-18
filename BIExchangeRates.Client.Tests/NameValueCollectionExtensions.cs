@@ -32,139 +32,76 @@ namespace BIExchangeRates.Client.Tests
 {
     static class NameValueCollectionExtensions
     {
-        public static bool TryGetInt(this NameValueCollection queryParameters, string parameter, bool isRequired,
-            out int value, out HttpResponseMessage response)
+        public static int GetInt(this NameValueCollection queryParameters, string parameter, bool isRequired)
         {
-            value = default;
-            response = null;
-
             if (!queryParameters.AllKeys.Contains(parameter))
             {
-                if (isRequired)
-                {
-                    response = MissingParameter(parameter);
-                    return false;
-                }
-
-                return true;
+                if (isRequired) MissingParameter(parameter);
+                return default;
             }
 
-            if (!int.TryParse(queryParameters[parameter], out value))
-            {
-                response = InvalidParameter(parameter, queryParameters[parameter]);
-                return false;
-            }
+            if (!int.TryParse(queryParameters[parameter], out var value))
+                InvalidParameter(parameter, queryParameters[parameter]);
 
-            return true;
+            return value;
         }
 
-        public static bool TryGetEnum<T>(this NameValueCollection queryParameters, string parameter, bool isRequired,
-            out T value, out HttpResponseMessage response) where T : struct
+        public static T GetEnum<T>(this NameValueCollection queryParameters, string parameter, bool isRequired)
+            where T : struct
         {
-            value = default;
-            response = null;
-
             if (!queryParameters.AllKeys.Contains(parameter))
             {
-                if (isRequired)
-                {
-                    response = MissingParameter(parameter);
-                    return false;
-                }
-
-                return true;
+                if (isRequired) MissingParameter(parameter);
+                return default;
             }
 
-            if (!Enum.TryParse(queryParameters[parameter], out value))
-            {
-                response = InvalidParameter(parameter, queryParameters[parameter]);
-                return false;
-            }
+            if (!Enum.TryParse(queryParameters[parameter], out T value))
+                InvalidParameter(parameter, queryParameters[parameter]);
 
-            return true;
+            return value;
         }
 
-        public static bool TryGetDateTime(this NameValueCollection queryParameters, string parameter, bool isRequired,
-            string format, IFormatProvider provider, DateTimeStyles style,
-            out DateTime value, out HttpResponseMessage response)
+        public static DateTime GetDateTime(this NameValueCollection queryParameters, string parameter, bool isRequired,
+            string format, IFormatProvider provider, DateTimeStyles style)
         {
-            value = default;
-            response = null;
-
             if (!queryParameters.AllKeys.Contains(parameter))
             {
-                if (isRequired)
-                {
-                    response = MissingParameter(parameter);
-                    return false;
-                }
-
-                return true;
+                if (isRequired) MissingParameter(parameter);
+                return default;
             }
 
-            if (!DateTime.TryParseExact(queryParameters[parameter], format, provider, style, out value))
-            {
-                response = InvalidParameter(parameter, queryParameters[parameter]);
-                return false;
-            }
+            if (!DateTime.TryParseExact(queryParameters[parameter], format, provider, style, out var value))
+                InvalidParameter(parameter, queryParameters[parameter]);
 
-            return true;
+            return value;
         }
 
-        public static bool TryGetString(this NameValueCollection queryParameters, string parameter, bool isRequired,
-            out string value, out HttpResponseMessage response)
+        public static string GetString(this NameValueCollection queryParameters, string parameter, bool isRequired)
         {
-            value = default;
-            response = null;
-
             if (!queryParameters.AllKeys.Contains(parameter))
             {
-                if (isRequired)
-                {
-                    response = MissingParameter(parameter);
-                    return false;
-                }
-
-                return true;
+                if (isRequired) MissingParameter(parameter);
+                return default;
             }
 
-            value = queryParameters[parameter];
-
-            return true;
+            return queryParameters[parameter];
         }
 
-        public static bool TryGetStrings(this NameValueCollection queryParameters, string parameter, bool isRequired,
-            out string[] value, out HttpResponseMessage response)
+        public static string[] GetStrings(this NameValueCollection queryParameters, string parameter, bool isRequired)
         {
-            value = default;
-            response = null;
-
             if (!queryParameters.AllKeys.Contains(parameter))
             {
-                if (isRequired)
-                {
-                    response = MissingParameter(parameter);
-                    return false;
-                }
-
-                return true;
+                if (isRequired) MissingParameter(parameter);
+                return default;
             }
 
-            value = queryParameters.GetValues(parameter) ?? default;
-
-            return true;
+            return queryParameters.GetValues(parameter) ?? default;
         }
 
-        private static HttpResponseMessage MissingParameter(string parameter) =>
-            new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent($"Required parameter {parameter} not found.")
-            };
+        private static void MissingParameter(string parameter) =>
+            throw new Exception($"Required parameter {parameter} not found.");
 
-        private static HttpResponseMessage InvalidParameter(string parameter, string value) =>
-            new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent($"Parameter {parameter} has an invalid value ({value}).")
-            };
+        private static void InvalidParameter(string parameter, string value) =>
+            throw new Exception($"Parameter {parameter} has an invalid value ({value}).");
     }
 }
