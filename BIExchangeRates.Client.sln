@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BIExchangeRates.Client", "BIExchangeRates.Client\BIExchangeRates.Client.csproj", "{62ADB55E-FAEF-4DA7-8EDD-E632CE6A4AC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BIExchangeRates.Console", "BIExchangeRates.Console\BIExchangeRates.Console.csproj", "{6904C7D1-63D6-435C-B809-A4B8939C298A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BIExchangeRates.Console", "BIExchangeRates.Console\BIExchangeRates.Console.csproj", "{6904C7D1-63D6-435C-B809-A4B8939C298A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BIExchangeRates.Client.Tests", "BIExchangeRates.Client.Tests\BIExchangeRates.Client.Tests.csproj", "{B2A0D6D6-5880-4603-91AA-4A461C5B3312}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{6904C7D1-63D6-435C-B809-A4B8939C298A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6904C7D1-63D6-435C-B809-A4B8939C298A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6904C7D1-63D6-435C-B809-A4B8939C298A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2A0D6D6-5880-4603-91AA-4A461C5B3312}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A0D6D6-5880-4603-91AA-4A461C5B3312}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A0D6D6-5880-4603-91AA-4A461C5B3312}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A0D6D6-5880-4603-91AA-4A461C5B3312}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
