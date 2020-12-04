@@ -13,6 +13,8 @@ To start using BIExchangeRates.Client in your project, install the package with 
 PM> Install-Package BIExchangeRates.Client
 ```
 
+The console application BIExchangeRates.Console is intended as an example on how to use the REST API wrapper in a real scenario.
+
 ## Remarks
 
 The class ExchangeRatesClient is derived from [HttpClient](https://docs.microsoft.com/dotnet/api/system.net.http.httpclient) that is intended to be instantiated once and re-used throughout the life of an application. Instantiating an ExchangeRatesClient class for every request will exhaust the number of sockets available under heavy loads. This will result in SocketException errors. Below is an example using ExchangeRatesClient correctly.
@@ -28,8 +30,6 @@ public class GoodController : ApiController
     }
 }
 ```
-
-The console application BIExchangeRates.Console is intended as an example on how to use the REST API wrapper in a real scenario.
 
 ## Documentation
 
