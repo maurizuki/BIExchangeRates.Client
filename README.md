@@ -1,5 +1,6 @@
 # BIExchangeRates.Client
 
+[![Nuget](https://img.shields.io/github/workflow/status/maurizuki/BIExchangeRates.Client/publish%20to%20nuget)](https://github.com/maurizuki/BIExchangeRates.Client/actions)
 [![Nuget](https://img.shields.io/nuget/dt/BIExchangeRates.Client)](https://www.nuget.org/packages/BIExchangeRates.Client)
 [![Nuget](https://img.shields.io/nuget/v/BIExchangeRates.Client)](https://www.nuget.org/packages/BIExchangeRates.Client)
 [![BIExchangeRates.Client on fuget.org](https://www.fuget.org/packages/BIExchangeRates.Client/badge.svg)](https://www.fuget.org/packages/BIExchangeRates.Client)
