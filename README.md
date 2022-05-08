@@ -1,9 +1,10 @@
 # BIExchangeRates.Client
 
+[![language](https://img.shields.io/github/languages/top/maurizuki/BIExchangeRates.Client)](https://github.com/maurizuki/BIExchangeRates.Client)
 [![Nuget](https://img.shields.io/github/workflow/status/maurizuki/BIExchangeRates.Client/publish%20to%20nuget)](https://github.com/maurizuki/BIExchangeRates.Client/actions)
-[![Nuget](https://img.shields.io/nuget/dt/BIExchangeRates.Client)](https://www.nuget.org/packages/BIExchangeRates.Client)
+[![issues](https://img.shields.io/github/issues/maurizuki/BIExchangeRates.Client)](https://github.com/maurizuki/BIExchangeRates.Client/issues)
 [![Nuget](https://img.shields.io/nuget/v/BIExchangeRates.Client)](https://www.nuget.org/packages/BIExchangeRates.Client)
-[![BIExchangeRates.Client on fuget.org](https://www.fuget.org/packages/BIExchangeRates.Client/badge.svg)](https://www.fuget.org/packages/BIExchangeRates.Client)
+[![Nuget](https://img.shields.io/nuget/dt/BIExchangeRates.Client)](https://www.nuget.org/packages/BIExchangeRates.Client)
 
 A .NET wrapper for the REST API of the currency exchange rates of [Banca d'Italia](https://tassidicambio.bancaditalia.it) (the central bank of Italy).
 
