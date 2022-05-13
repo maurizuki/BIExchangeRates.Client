@@ -10,11 +10,13 @@ A .NET wrapper for the REST API of the currency exchange rates of [Banca d'Itali
 
 ## Getting started
 
-To start using BIExchangeRates.Client in your project, install the package with the NuGet Package Manager:
+To add BIExchangeRates.Client to your project, you can use the following NuGet Package Manager command:
 
 ```PowerShell
-PM> Install-Package BIExchangeRates.Client
+Install-Package BIExchangeRates.Client
 ```
+
+More options are available on the [BIExchangeRates.Client page](https://www.nuget.org/packages/BIExchangeRates.Client) of the NuGet Gallery website.
 
 The console application BIExchangeRates.Console is intended as an example on how to use the REST API wrapper in a real scenario.
 
@@ -36,5 +38,5 @@ public class GoodController : ApiController
 
 ## Documentation
 
-* [BIExchangeRates.Client 1.0 Reference](https://github.com/maurizuki/BIExchangeRates.Client/wiki/BIExchangeRates.Client-1.0)
-* [REST API documentation](https://tassidicambio.bancaditalia.it/terzevalute-wf-ui-web/assets/files/Operating_Instructions.pdf)
+* [BIExchangeRates.Client 1.0 API Reference](https://github.com/maurizuki/BIExchangeRates.Client/wiki/BIExchangeRates.Client-1.0)
+* [Official REST API documentation](https://tassidicambio.bancaditalia.it/terzevalute-wf-ui-web/assets/files/Operating_Instructions.pdf)
