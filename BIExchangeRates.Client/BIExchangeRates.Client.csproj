@@ -3,23 +3,40 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Maurizio Basaglia</Authors>
-    <Description>A wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).</Description>
-    <Copyright>© 2020 Maurizio Basaglia</Copyright>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageTags></PackageTags>
+    <Description>A wrapper for the REST API of the currency exchange rates of Banca d'Italia (the central bank of Italy).</Description>
+    <Copyright>© 2020-2022 Maurizio Basaglia</Copyright>
+    <PackageTags>currency exchange rates;banca italia</PackageTags>
     <RepositoryUrl>https://github.com/maurizuki/BIExchangeRates.Client</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
+    <Title>BIExchangeRates.Client</Title>
+    <PackageProjectUrl>https://github.com/maurizuki/BIExchangeRates.Client</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>Fixed security issue "Improper Handling of Exceptional Conditions" (CWE-755) in Newtonsoft.Json &lt; 13.0.1.</PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
