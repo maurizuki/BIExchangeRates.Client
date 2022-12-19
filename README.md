@@ -1,7 +1,6 @@
 # BIExchangeRates.Client
 
 [![language](https://img.shields.io/github/languages/top/maurizuki/BIExchangeRates.Client)](https://github.com/maurizuki/BIExchangeRates.Client)
-[![Nuget](https://img.shields.io/github/workflow/status/maurizuki/BIExchangeRates.Client/publish%20to%20nuget)](https://github.com/maurizuki/BIExchangeRates.Client/actions)
 [![issues](https://img.shields.io/github/issues/maurizuki/BIExchangeRates.Client)](https://github.com/maurizuki/BIExchangeRates.Client/issues)
 [![Nuget](https://img.shields.io/nuget/v/BIExchangeRates.Client)](https://www.nuget.org/packages/BIExchangeRates.Client)
 [![Nuget](https://img.shields.io/nuget/dt/BIExchangeRates.Client)](https://www.nuget.org/packages/BIExchangeRates.Client)
