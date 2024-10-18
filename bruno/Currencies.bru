@@ -1,0 +1,15 @@
+meta {
+  name: Currencies
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUri}}/currencies?lang=en
+  body: none
+  auth: none
+}
+
+params:query {
+  lang: en
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Daily Time Series
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUri}}/dailyTimeSeries?startDate=2020-12-01&endDate=2020-12-31&baseCurrencyIsoCode=USD&currencyIsoCode=EUR&lang=en
+  body: none
+  auth: none
+}
+
+params:query {
+  startDate: 2020-12-01
+  endDate: 2020-12-31
+  baseCurrencyIsoCode: USD
+  currencyIsoCode: EUR
+  lang: en
+}

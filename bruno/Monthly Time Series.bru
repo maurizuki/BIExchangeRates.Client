@@ -1,0 +1,21 @@
+meta {
+  name: Monthly Time Series
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUri}}/monthlyTimeSeries?startMonth=1&startYear=2020&endMonth=12&endYear=2020&baseCurrencyIsoCode=USD&currencyIsoCode=EUR&lang=en
+  body: none
+  auth: none
+}
+
+params:query {
+  startMonth: 1
+  startYear: 2020
+  endMonth: 12
+  endYear: 2020
+  baseCurrencyIsoCode: USD
+  currencyIsoCode: EUR
+  lang: en
+}

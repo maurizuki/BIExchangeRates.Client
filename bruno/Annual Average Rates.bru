@@ -1,0 +1,17 @@
+meta {
+  name: Annual Average Rates
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUri}}/annualAverageRates?year=2020&currencyIsoCode=EUR&lang=en
+  body: none
+  auth: none
+}
+
+params:query {
+  year: 2020
+  currencyIsoCode: EUR
+  lang: en
+}

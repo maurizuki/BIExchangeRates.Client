@@ -1,0 +1,15 @@
+meta {
+  name: Latest Rates
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUri}}/latestRates?lang=en
+  body: none
+  auth: none
+}
+
+params:query {
+  lang: en
+}

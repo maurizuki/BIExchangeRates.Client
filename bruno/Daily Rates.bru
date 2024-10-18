@@ -1,0 +1,17 @@
+meta {
+  name: Daily Rates
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUri}}/dailyRates?referenceDate=2020-12-31&currencyIsoCode=EUR&lang=en
+  body: none
+  auth: none
+}
+
+params:query {
+  referenceDate: 2020-12-31
+  currencyIsoCode: EUR
+  lang: en
+}

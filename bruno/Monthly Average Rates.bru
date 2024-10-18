@@ -1,0 +1,18 @@
+meta {
+  name: Monthly Average Rates
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUri}}/monthlyAverageRates?month=12&year=2020&currencyIsoCode=EUR&lang=en
+  body: none
+  auth: none
+}
+
+params:query {
+  month: 12
+  year: 2020
+  currencyIsoCode: EUR
+  lang: en
+}

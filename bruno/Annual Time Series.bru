@@ -1,0 +1,19 @@
+meta {
+  name: Annual Time Series
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUri}}/annualTimeSeries?startYear=2010&endYear=2020&baseCurrencyIsoCode=USD&currencyIsoCode=EUR&lang=en
+  body: none
+  auth: none
+}
+
+params:query {
+  startYear: 2010
+  endYear: 2020
+  baseCurrencyIsoCode: USD
+  currencyIsoCode: EUR
+  lang: en
+}
