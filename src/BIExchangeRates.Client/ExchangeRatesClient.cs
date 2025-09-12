@@ -38,6 +38,8 @@ namespace BIExchangeRates.Client
     /// </summary>
     public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	{
+		private static readonly Uri DefaultBaseAddress = new Uri("https://tassidicambio.bancaditalia.it/terzevalute-wf-web/rest/v1.0/");
+
 		/// <summary>
 		/// Initializes a new instance of the ExchangeRatesClient class using a HttpClientHandler that is disposed when this instance is disposed.
 		/// </summary>
@@ -58,7 +60,7 @@ namespace BIExchangeRates.Client
 		/// <exception cref="ArgumentNullException"></exception>
 		public ExchangeRatesClient(HttpMessageHandler handler, bool disposeHandler) : base(handler, disposeHandler)
         {
-			BaseAddress = new Uri("https://tassidicambio.bancaditalia.it/terzevalute-wf-web/rest/v1.0/");
+			BaseAddress = DefaultBaseAddress;
 			DefaultRequestHeaders.Add("Accept", MediaTypeNames.Application.Json);
 		}
 
