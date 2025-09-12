@@ -27,16 +27,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BIExchangeRates.Client
 {
-    /// <summary>
-    /// Provides a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
-    /// </summary>
-    public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
+	/// <summary>
+	/// Provides a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
+	/// </summary>
+	public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	{
 		private static readonly Uri DefaultBaseAddress = new Uri("https://tassidicambio.bancaditalia.it/terzevalute-wf-web/rest/v1.0/");
 
@@ -59,9 +58,9 @@ namespace BIExchangeRates.Client
 		/// <param name="disposeHandler">true if the inner handler should be disposed of by ExchangeRatesClient.Dispose; false if you intend to reuse the inner handler.</param>
 		/// <exception cref="ArgumentNullException"></exception>
 		public ExchangeRatesClient(HttpMessageHandler handler, bool disposeHandler) : base(handler, disposeHandler)
-        {
+		{
 			BaseAddress = DefaultBaseAddress;
-			DefaultRequestHeaders.Add("Accept", MediaTypeNames.Application.Json);
+			DefaultRequestHeaders.Add("Accept", "application/json");
 		}
 
 		/// <summary>
@@ -103,7 +102,7 @@ namespace BIExchangeRates.Client
 			return await GetModel<DailyRatesModel>(new StringBuilder("dailyRates")
 				.Append("?referenceDate=").Append(referenceDate.ToString("yyyy-MM-dd"))
 				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-				.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
+				.Append(string.Join("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}")))
 				.Append("&currencyIsoCode=").Append(currencyIsoCode)
 				.Append("&lang=").Append(language)
 				.ToString());
@@ -142,7 +141,7 @@ namespace BIExchangeRates.Client
 				.Append("?month=").Append(month)
 				.Append("&year=").Append(year)
 				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-				.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
+				.Append(string.Join("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}")))
 				.Append("&currencyIsoCode=").Append(currencyIsoCode)
 				.Append("&lang=").Append(language)
 				.ToString());
@@ -178,7 +177,7 @@ namespace BIExchangeRates.Client
 			return await GetModel<AnnualAverageRatesModel>(new StringBuilder("annualAverageRates")
 				.Append("?year=").Append(year)
 				.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-				.AppendJoin("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}"))
+				.Append(string.Join("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}")))
 				.Append("&currencyIsoCode=").Append(currencyIsoCode)
 				.Append("&lang=").Append(language)
 				.ToString());
