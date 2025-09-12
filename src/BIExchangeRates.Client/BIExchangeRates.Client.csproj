@@ -5,16 +5,17 @@
     <Authors>Maurizio Basaglia</Authors>
     <Description>A wrapper for the REST API of the currency exchange rates of Banca d'Italia (the central bank of Italy).</Description>
     <Copyright>© 2020+ Maurizio Basaglia</Copyright>
-    <PackageTags>currency exchange-rates currency-exchange-rates banca-italia bank-of-italy</PackageTags>
+    <PackageTags>currency currency-exchange currency-rates exchange-rates currency-exchange-rates banca-italia central-bank-of-italy bank-of-italy</PackageTags>
     <RepositoryUrl>https://github.com/maurizuki/BIExchangeRates.Client</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.4</Version>
+    <Version>1.1.0</Version>
     <Title>BIExchangeRates.Client</Title>
     <PackageProjectUrl>https://github.com/maurizuki/BIExchangeRates.Client</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Fixed security issue "Improper Handling of Exceptional Conditions" (CWE-755) in Newtonsoft.Json &lt; 13.0.1.</PackageReleaseNotes>
+    <PackageReleaseNotes>- Fixed errors caused by suspended currencies
+- Target framework changed to netstandard2.0</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
