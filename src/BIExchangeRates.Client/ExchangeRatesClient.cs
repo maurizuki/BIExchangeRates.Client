@@ -260,11 +260,17 @@ namespace BIExchangeRates.Client
 		private async Task<T> GetModel<T>(string requestUri)
 		{
 			var response = await GetAsync(requestUri);
-			var content = response.Content != null ? await response.Content.ReadAsStringAsync() : string.Empty;
+			var content = await response.Content?.ReadAsStringAsync() ?? string.Empty;
+
 			if (!response.IsSuccessStatusCode)
+			{
 				throw new HttpRequestException(
 					$"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}). Response content: {content}");
-			return JsonConvert.DeserializeObject<T>(content);
+			}
+			
+			return JsonConvert.DeserializeObject<T>(
+				content, 
+				new JsonSerializerSettings { Error = (sender, args) => args.ErrorContext.Handled = true });
 		}
 	}
 }
