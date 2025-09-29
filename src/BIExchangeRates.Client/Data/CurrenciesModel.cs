@@ -24,43 +24,42 @@
 using System;
 using System.Collections.Generic;
 
-namespace BIExchangeRates.Client.Data
+namespace BIExchangeRates.Client.Data;
+
+public sealed class CurrenciesModel
 {
-	public sealed class CurrenciesModel
+	public sealed class ResultsInfoModel
 	{
-		public sealed class ResultsInfoModel
-		{
-			public int TotalRecords { get; set; }
+		public int TotalRecords { get; set; }
 
-			public string TimezoneReference { get; set; }
-		}
-
-		public ResultsInfoModel ResultsInfo { get; set; }
-
-		public sealed class CurrencyModel
-		{
-			public sealed class CountryModel
-			{
-				public string CurrencyIso { get; set; }
-
-				public string Country { get; set; }
-
-				public string CountryIso { get; set; }
-
-				public DateTime ValidityStartDate { get; set; }
-
-				public DateTime? ValidityEndDate { get; set; }
-			}
-
-			public IEnumerable<CountryModel> Countries { get; set; }
-
-			public string IsoCode { get; set; }
-
-			public string Name { get; set; }
-
-			public bool Graph { get; set; }
-		}
-
-		public IEnumerable<CurrencyModel> Currencies { get; set; }
+		public string TimezoneReference { get; set; }
 	}
+
+	public ResultsInfoModel ResultsInfo { get; set; }
+
+	public sealed class CurrencyModel
+	{
+		public sealed class CountryModel
+		{
+			public string CurrencyIso { get; set; }
+
+			public string Country { get; set; }
+
+			public string CountryIso { get; set; }
+
+			public DateTime ValidityStartDate { get; set; }
+
+			public DateTime? ValidityEndDate { get; set; }
+		}
+
+		public IEnumerable<CountryModel> Countries { get; set; }
+
+		public string IsoCode { get; set; }
+
+		public string Name { get; set; }
+
+		public bool Graph { get; set; }
+	}
+
+	public IEnumerable<CurrencyModel> Currencies { get; set; }
 }

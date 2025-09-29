@@ -24,38 +24,37 @@
 using System;
 using System.Collections.Generic;
 
-namespace BIExchangeRates.Client.Data
+namespace BIExchangeRates.Client.Data;
+
+public sealed class DailyRatesModel
 {
-	public sealed class DailyRatesModel
+	public sealed class ResultsInfoModel
 	{
-		public sealed class ResultsInfoModel
-		{
-			public int TotalRecords { get; set; }
+		public int TotalRecords { get; set; }
 
-			public string TimezoneReference { get; set; }
-		}
-
-		public ResultsInfoModel ResultsInfo { get; set; }
-
-		public sealed class ExchangeRateModel
-		{
-			public string Country { get; set; }
-
-			public string Currency { get; set; }
-
-			public string IsoCode { get; set; }
-
-			public string UicCode { get; set; }
-
-			public double AvgRate { get; set; }
-
-			public string ExchangeConvention { get; set; }
-
-			public string ExchangeConventionCode { get; set; }
-
-			public DateTime ReferenceDate { get; set; }
-		}
-
-		public IEnumerable<ExchangeRateModel> Rates { get; set; }
+		public string TimezoneReference { get; set; }
 	}
+
+	public ResultsInfoModel ResultsInfo { get; set; }
+
+	public sealed class ExchangeRateModel
+	{
+		public string Country { get; set; }
+
+		public string Currency { get; set; }
+
+		public string IsoCode { get; set; }
+
+		public string UicCode { get; set; }
+
+		public double AvgRate { get; set; }
+
+		public string ExchangeConvention { get; set; }
+
+		public string ExchangeConventionCode { get; set; }
+
+		public DateTime ReferenceDate { get; set; }
+	}
+
+	public IEnumerable<ExchangeRateModel> Rates { get; set; }
 }
