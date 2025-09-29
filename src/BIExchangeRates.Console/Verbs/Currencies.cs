@@ -21,10 +21,6 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using BIExchangeRates.Client;
-using CommandLine;
-using Con = System.Console;
-
 namespace BIExchangeRates.Console.Verbs;
 
 [Verb("currencies", HelpText = "List of all the available currencies.")]

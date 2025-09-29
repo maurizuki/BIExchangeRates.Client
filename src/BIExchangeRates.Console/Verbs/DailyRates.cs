@@ -21,12 +21,9 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using BIExchangeRates.Client;
-using CommandLine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Con = System.Console;
 
 namespace BIExchangeRates.Console.Verbs;
 

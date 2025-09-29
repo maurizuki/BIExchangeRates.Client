@@ -21,9 +21,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using BIExchangeRates.Client;
 using BIExchangeRates.Console.Verbs;
-using CommandLine;
 
 Parser.Default
 	.ParseArguments<LatestRates, DailyRates, MonthlyAverageRates, AnnualAverageRates, DailyTimeSeries, MonthlyTimeSeries, AnnualTimeSeries, Currencies>(args)
