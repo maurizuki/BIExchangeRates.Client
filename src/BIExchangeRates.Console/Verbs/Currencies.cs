@@ -23,29 +23,28 @@
 
 using BIExchangeRates.Client;
 using CommandLine;
+using Con = System.Console;
 
-namespace BIExchangeRates.Console.Verbs
+namespace BIExchangeRates.Console.Verbs;
+
+[Verb("currencies", HelpText = "List of all the available currencies.")]
+public class Currencies
 {
-    [Verb("currencies", HelpText = "List of all the available currencies.")]
-	public class Currencies
-    {
-		public static void Execute(IExchangeRatesClient client)
-		{
-			var model = client.GetCurrencies().Result;
+	public static void Execute(IExchangeRatesClient client)
+	{
+		var model = client.GetCurrencies().Result;
 
-			System.Console.WriteLine("ISO  Currency");
-			System.Console.WriteLine("     Valid from  Valid to    ISO  Country");
-			foreach (var currency in model.Currencies)
+		Con.WriteLine("ISO  Currency");
+		Con.WriteLine("     Valid from  Valid to    ISO  Country");
+		foreach (var currency in model.Currencies)
+		{
+			Con.WriteLine($"{currency.IsoCode,-3}  {currency.Name}");
+			foreach (var country in currency.Countries)
 			{
-				System.Console.WriteLine($"{currency.IsoCode,-3}  {currency.Name}");
-				foreach (var country in currency.Countries)
-				{
-					System.Console.WriteLine(
-						$"     {country.ValidityStartDate,10:yyyy-MM-dd}  {country.ValidityEndDate,10:yyyy-MM-dd}  {country.CountryIso,-3}  {country.Country}");
-				}
+				Con.WriteLine($"     {country.ValidityStartDate,10:yyyy-MM-dd}  {country.ValidityEndDate,10:yyyy-MM-dd}  {country.CountryIso,-3}  {country.Country}");
 			}
-			System.Console.WriteLine();
-			System.Console.WriteLine(model.ResultsInfo.TimezoneReference);
 		}
+		Con.WriteLine();
+		Con.WriteLine(model.ResultsInfo.TimezoneReference);
 	}
 }

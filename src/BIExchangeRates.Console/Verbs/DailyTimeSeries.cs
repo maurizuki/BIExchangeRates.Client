@@ -25,47 +25,45 @@ using BIExchangeRates.Client;
 using CommandLine;
 using System;
 using System.Linq;
+using Con = System.Console;
 
-namespace BIExchangeRates.Console.Verbs
+namespace BIExchangeRates.Console.Verbs;
+
+[Verb("dailyTimeSeries", HelpText = "Daily exchange rates of a currency for a specific date range.")]
+public class DailyTimeSeries
 {
-    [Verb("dailyTimeSeries", HelpText = "Daily exchange rates of a currency for a specific date range.")]
-    public class DailyTimeSeries
-    {
-		[Value(0, Required = true,
-			HelpText = "Start date of the range for the exchange rates (format: YYYY-MM-DD).")]
-		public DateTime StartDate { get; set; }
+	[Value(0, Required = true,
+		HelpText = "Start date of the range for the exchange rates (format: YYYY-MM-DD).")]
+	public DateTime StartDate { get; set; }
 
-		[Value(1, Required = true,
-			HelpText = "End date of the range for the exchange rates (format: YYYY-MM-DD).")]
-		public DateTime EndDate { get; set; }
+	[Value(1, Required = true,
+		HelpText = "End date of the range for the exchange rates (format: YYYY-MM-DD).")]
+	public DateTime EndDate { get; set; }
 
-		[Value(2, Required = true,
-			HelpText = "ISO code of the reference currency (EUR, USD or ITL).")]
-		public string CurrencyIsoCode { get; set; }
+	[Value(2, Required = true,
+		HelpText = "ISO code of the reference currency (EUR, USD or ITL).")]
+	public string CurrencyIsoCode { get; set; }
 
-		[Value(3, Required = true,
-			HelpText = "ISO code of the required currency.")]
-		public string BaseCurrencyIsoCode { get; set; }
+	[Value(3, Required = true,
+		HelpText = "ISO code of the required currency.")]
+	public string BaseCurrencyIsoCode { get; set; }
 
-		public static void Execute(IExchangeRatesClient client, DailyTimeSeries options)
+	public static void Execute(IExchangeRatesClient client, DailyTimeSeries options)
+	{
+		var model = client.GetDailyTimeSeries(options.StartDate, options.EndDate,
+			options.BaseCurrencyIsoCode.ToUpper(),
+			options.CurrencyIsoCode.ToUpper()).Result;
+
+		Con.WriteLine($"{model.ResultsInfo.IsoCode}  {model.ResultsInfo.Currency}");
+		Con.WriteLine();
+		Con.WriteLine($"Ref. date   Rate");
+		foreach (var rate in model.Rates)
 		{
-			var model = client.GetDailyTimeSeries(options.StartDate, options.EndDate,
-				options.BaseCurrencyIsoCode.ToUpper(),
-				options.CurrencyIsoCode.ToUpper()).Result;
-
-			System.Console.WriteLine($"{model.ResultsInfo.IsoCode}  {model.ResultsInfo.Currency}");
-			System.Console.WriteLine();
-			System.Console.WriteLine($"Ref. date   Rate");
-			foreach (var rate in model.Rates)
-			{
-				System.Console.WriteLine(
-					$"{rate.ReferenceDate:yyyy-MM-dd}  {rate.AvgRate,16:N6} {model.ResultsInfo.ExchangeConventionCode,1}");
-			}
-			System.Console.WriteLine();
-			System.Console.WriteLine(model.ResultsInfo.TimezoneReference);
-			System.Console.WriteLine("Exchange convention:");
-			System.Console.WriteLine(
-				$"{model.ResultsInfo.ExchangeConventionCode} {model.Rates.FirstOrDefault()?.ExchangeConvention}");
+			Con.WriteLine($"{rate.ReferenceDate:yyyy-MM-dd}  {rate.AvgRate,16:N6} {model.ResultsInfo.ExchangeConventionCode,1}");
 		}
+		Con.WriteLine();
+		Con.WriteLine(model.ResultsInfo.TimezoneReference);
+		Con.WriteLine("Exchange convention:");
+		Con.WriteLine($"{model.ResultsInfo.ExchangeConventionCode} {model.Rates.FirstOrDefault()?.ExchangeConvention}");
 	}
 }

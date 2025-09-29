@@ -25,45 +25,43 @@ using BIExchangeRates.Client;
 using CommandLine;
 using System.Collections.Generic;
 using System.Linq;
+using Con = System.Console;
 
-namespace BIExchangeRates.Console.Verbs
-{
-	[Verb("annual", HelpText = "Annual average exchange rates for a specific year.")]
-	public class AnnualAverageRates
-    {
-		[Value(0, Required = true,
-			HelpText = "Reference year for the exchange rates.")]
-		public int Year { get; set; }
+namespace BIExchangeRates.Console.Verbs;
 
-		[Value(1, Required = true,
-			HelpText = "ISO code of the reference currency (EUR, USD or ITL).")]
-		public string CurrencyIsoCode { get; set; }
+[Verb("annual", HelpText = "Annual average exchange rates for a specific year.")]
+public class AnnualAverageRates
+	{
+	[Value(0, Required = true,
+		HelpText = "Reference year for the exchange rates.")]
+	public int Year { get; set; }
 
-		[Value(2,
-			HelpText = "List of ISO codes of the required currencies. Leave empty to get all the valid currencies.")]
-		public IEnumerable<string> BaseCurrencyIsoCodes { get; set; }
+	[Value(1, Required = true,
+		HelpText = "ISO code of the reference currency (EUR, USD or ITL).")]
+	public string CurrencyIsoCode { get; set; }
 
-		public static void Execute(IExchangeRatesClient client, AnnualAverageRates options)
+	[Value(2,
+		HelpText = "List of ISO codes of the required currencies. Leave empty to get all the valid currencies.")]
+	public IEnumerable<string> BaseCurrencyIsoCodes { get; set; }
+
+	public static void Execute(IExchangeRatesClient client, AnnualAverageRates options)
+	{
+		var model = client.GetAnnualAverageRates(options.Year,
+			options.BaseCurrencyIsoCodes.Select(e => e.ToUpper()),
+			options.CurrencyIsoCode.ToUpper()).Result;
+		var exchangeConventions = model.Rates
+			.Select(e => new { e.ExchangeConventionCode, e.ExchangeConvention }).Distinct().ToList();
+
+		Con.WriteLine($"Year  Rate                ISO  Currency, country");
+		foreach (var rate in model.Rates)
 		{
-			var model = client.GetAnnualAverageRates(options.Year,
-				options.BaseCurrencyIsoCodes.Select(e => e.ToUpper()),
-				options.CurrencyIsoCode.ToUpper()).Result;
-			var exchangeConventions = model.Rates
-				.Select(e => new { e.ExchangeConventionCode, e.ExchangeConvention }).Distinct().ToList();
-
-			System.Console.WriteLine($"Year  Rate                ISO  Currency, country");
-			foreach (var rate in model.Rates)
-			{
-				System.Console.WriteLine(
-					$"{rate.Year:0000}  {rate.AvgRate,16:N6} {rate.ExchangeConventionCode,1}  {rate.IsoCode,-3}  {rate.Currency}, {rate.Country}");
-			}
-			System.Console.WriteLine();
-			System.Console.WriteLine("Exchange convention:");
-			foreach (var exchangeConvention in exchangeConventions)
-			{
-				System.Console.WriteLine(
-					$"{exchangeConvention.ExchangeConventionCode} {exchangeConvention.ExchangeConvention}");
-			}
+			Con.WriteLine($"{rate.Year:0000}  {rate.AvgRate,16:N6} {rate.ExchangeConventionCode,1}  {rate.IsoCode,-3}  {rate.Currency}, {rate.Country}");
+		}
+		Con.WriteLine();
+		Con.WriteLine("Exchange convention:");
+		foreach (var exchangeConvention in exchangeConventions)
+		{
+			Con.WriteLine($"{exchangeConvention.ExchangeConventionCode} {exchangeConvention.ExchangeConvention}");
 		}
 	}
 }

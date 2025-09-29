@@ -24,33 +24,31 @@
 using BIExchangeRates.Client;
 using CommandLine;
 using System.Linq;
+using Con = System.Console;
 
-namespace BIExchangeRates.Console.Verbs
+namespace BIExchangeRates.Console.Verbs;
+
+[Verb("latest", HelpText = "Latest available exchange rates for all the valid currencies.")]
+public class LatestRates
 {
-    [Verb("latest", HelpText = "Latest available exchange rates for all the valid currencies.")]
-	public class LatestRates
-    {
-		public static void Execute(IExchangeRatesClient client)
-		{
-			var model = client.GetLatestRates().Result;
-			var usdExchangeConventions = model.LatestRates.Where(e => e.IsoCode != "USD")
-				.Select(e => new { e.UsdExchangeConventionCode, e.UsdExchangeConvention }).Distinct().ToList();
+	public static void Execute(IExchangeRatesClient client)
+	{
+		var model = client.GetLatestRates().Result;
+		var usdExchangeConventions = model.LatestRates.Where(e => e.IsoCode != "USD")
+			.Select(e => new { e.UsdExchangeConventionCode, e.UsdExchangeConvention }).Distinct().ToList();
 
-			System.Console.WriteLine($"Ref. date   EUR rate          USD rate            ISO  Currency, country");
-			foreach (var rate in model.LatestRates)
-			{
-				System.Console.WriteLine(
-					$"{rate.ReferenceDate:yyyy-MM-dd}  {rate.EurRate,16:N6}  {rate.UsdRate,16:N6} {rate.UsdExchangeConventionCode,1}  {rate.IsoCode,-3}  {rate.Currency}, {rate.Country}");
-			}
-			System.Console.WriteLine();
-			System.Console.WriteLine(model.ResultsInfo.TimezoneReference);
-			System.Console.WriteLine(model.ResultsInfo.Notice);
-			System.Console.WriteLine("USD exchange convention:");
-			foreach (var usdExchangeConvention in usdExchangeConventions)
-			{
-				System.Console.WriteLine(
-					$"{usdExchangeConvention.UsdExchangeConventionCode} {usdExchangeConvention.UsdExchangeConvention}");
-			}
+		Con.WriteLine($"Ref. date   EUR rate          USD rate            ISO  Currency, country");
+		foreach (var rate in model.LatestRates)
+		{
+			Con.WriteLine($"{rate.ReferenceDate:yyyy-MM-dd}  {rate.EurRate,16:N6}  {rate.UsdRate,16:N6} {rate.UsdExchangeConventionCode,1}  {rate.IsoCode,-3}  {rate.Currency}, {rate.Country}");
+		}
+		Con.WriteLine();
+		Con.WriteLine(model.ResultsInfo.TimezoneReference);
+		Con.WriteLine(model.ResultsInfo.Notice);
+		Con.WriteLine("USD exchange convention:");
+		foreach (var usdExchangeConvention in usdExchangeConventions)
+		{
+			Con.WriteLine($"{usdExchangeConvention.UsdExchangeConventionCode} {usdExchangeConvention.UsdExchangeConvention}");
 		}
 	}
 }

@@ -24,46 +24,44 @@
 using BIExchangeRates.Client;
 using CommandLine;
 using System.Linq;
+using Con = System.Console;
 
-namespace BIExchangeRates.Console.Verbs
+namespace BIExchangeRates.Console.Verbs;
+
+[Verb("annualTimeSeries", HelpText = "Annual average exchange rates of a currency for a specific year range.")]
+public class AnnualTimeSeries
 {
-    [Verb("annualTimeSeries", HelpText = "Annual average exchange rates of a currency for a specific year range.")]
-	public class AnnualTimeSeries
-    {
-		[Value(0, Required = true,
-			HelpText = "Start year of the range for the exchange rates.")]
-		public int StartYear { get; set; }
+	[Value(0, Required = true,
+		HelpText = "Start year of the range for the exchange rates.")]
+	public int StartYear { get; set; }
 
-		[Value(1, Required = true,
-			HelpText = "End year of the range for the exchange rates.")]
-		public int EndYear { get; set; }
+	[Value(1, Required = true,
+		HelpText = "End year of the range for the exchange rates.")]
+	public int EndYear { get; set; }
 
-		[Value(2, Required = true,
-			HelpText = "ISO code of the reference currency (EUR, USD or ITL).")]
-		public string CurrencyIsoCode { get; set; }
+	[Value(2, Required = true,
+		HelpText = "ISO code of the reference currency (EUR, USD or ITL).")]
+	public string CurrencyIsoCode { get; set; }
 
-		[Value(3, Required = true,
-			HelpText = "ISO code of the required currency.")]
-		public string BaseCurrencyIsoCode { get; set; }
+	[Value(3, Required = true,
+		HelpText = "ISO code of the required currency.")]
+	public string BaseCurrencyIsoCode { get; set; }
 
-		public static void Execute(IExchangeRatesClient client, AnnualTimeSeries options)
+	public static void Execute(IExchangeRatesClient client, AnnualTimeSeries options)
+	{
+		var model = client.GetAnnualTimeSeries(options.StartYear, options.EndYear,
+			options.BaseCurrencyIsoCode.ToUpper(),
+			options.CurrencyIsoCode.ToUpper()).Result;
+
+		Con.WriteLine($"{model.ResultsInfo.IsoCode}  {model.ResultsInfo.Currency}");
+		Con.WriteLine();
+		Con.WriteLine($"Year  Rate");
+		foreach (var rate in model.Rates)
 		{
-			var model = client.GetAnnualTimeSeries(options.StartYear, options.EndYear,
-				options.BaseCurrencyIsoCode.ToUpper(),
-				options.CurrencyIsoCode.ToUpper()).Result;
-
-			System.Console.WriteLine($"{model.ResultsInfo.IsoCode}  {model.ResultsInfo.Currency}");
-			System.Console.WriteLine();
-			System.Console.WriteLine($"Year  Rate");
-			foreach (var rate in model.Rates)
-			{
-				System.Console.WriteLine(
-					$"{rate.ReferenceDate:0000}  {rate.AvgRate,16:N6} {model.ResultsInfo.ExchangeConventionCode,1}");
-			}
-			System.Console.WriteLine();
-			System.Console.WriteLine("Exchange convention:");
-			System.Console.WriteLine(
-				$"{model.ResultsInfo.ExchangeConventionCode} {model.Rates.FirstOrDefault()?.ExchangeConvention}");
+			Con.WriteLine($"{rate.ReferenceDate:0000}  {rate.AvgRate,16:N6} {model.ResultsInfo.ExchangeConventionCode,1}");
 		}
+		Con.WriteLine();
+		Con.WriteLine("Exchange convention:");
+		Con.WriteLine($"{model.ResultsInfo.ExchangeConventionCode} {model.Rates.FirstOrDefault()?.ExchangeConvention}");
 	}
 }
