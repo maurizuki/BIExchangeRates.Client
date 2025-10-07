@@ -261,4 +261,25 @@ public class TestRequests
 
 		await client.GetAnnualTimeSeries(2020, 2021, baseCurrency, currency, language);
 	}
+
+	[Theory]
+	[InlineData(Language.En, BaseAddress + "currencies?lang=En")]
+	[InlineData(Language.It, BaseAddress + "currencies?lang=It")]
+	public async Task GetCurrencies(Language language, string expectedRequestUri)
+	{
+		var client = new ExchangeRatesClient(
+			new CustomHttpMessageHandler(
+				request =>
+				{
+					Assert.Equal(HttpMethod.Get, request.Method);
+
+					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
+
+					return DefaultResponseMessage;
+				}
+			)
+		);
+
+		await client.GetCurrencies(language);
+	}
 }
