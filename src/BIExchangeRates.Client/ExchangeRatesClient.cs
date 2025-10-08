@@ -27,7 +27,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BIExchangeRates.Client;
@@ -100,14 +99,8 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	public async Task<DailyRatesModel> GetDailyRates(DateTime referenceDate, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
 	{
 		if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
-		var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-		return await GetModel<DailyRatesModel>(new StringBuilder("dailyRates")
-			.Append("?referenceDate=").Append(referenceDate.ToString("yyyy-MM-dd"))
-			.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-			.Append(string.Join("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}")))
-			.Append("&currencyIsoCode=").Append(currencyIsoCode)
-			.Append("&lang=").Append(language)
-			.ToString());
+		return await GetModel<DailyRatesModel>(
+			$"dailyRates?referenceDate={referenceDate:yyyy-MM-dd}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}");
 	}
 
 	/// <summary>
@@ -138,15 +131,8 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	public async Task<MonthlyAverageRatesModel> GetMonthlyAverageRates(int month, int year, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
 	{
 		if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
-		var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-		return await GetModel<MonthlyAverageRatesModel>(new StringBuilder("monthlyAverageRates")
-			.Append("?month=").Append(month)
-			.Append("&year=").Append(year)
-			.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-			.Append(string.Join("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}")))
-			.Append("&currencyIsoCode=").Append(currencyIsoCode)
-			.Append("&lang=").Append(language)
-			.ToString());
+		return await GetModel<MonthlyAverageRatesModel>(
+			$"monthlyAverageRates?month={month}&year={year}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}");
 	}
 
 	/// <summary>
@@ -175,14 +161,8 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	public async Task<AnnualAverageRatesModel> GetAnnualAverageRates(int year, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
 	{
 		if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
-		var baseCurrencyIsoCodeList = baseCurrencyIsoCodes.ToList();
-		return await GetModel<AnnualAverageRatesModel>(new StringBuilder("annualAverageRates")
-			.Append("?year=").Append(year)
-			.Append(baseCurrencyIsoCodeList.Count > 0 ? "&" : string.Empty)
-			.Append(string.Join("&", baseCurrencyIsoCodeList.Select(isoCode => $"baseCurrencyIsoCode={isoCode}")))
-			.Append("&currencyIsoCode=").Append(currencyIsoCode)
-			.Append("&lang=").Append(language)
-			.ToString());
+		return await GetModel<AnnualAverageRatesModel>(
+			$"annualAverageRates?year={year}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}");
 	}
 
 	/// <summary>
@@ -197,13 +177,8 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException"></exception>
 	public async Task<DailyTimeSeriesModel> GetDailyTimeSeries(DateTime startDate, DateTime endDate, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetModel<DailyTimeSeriesModel>(new StringBuilder("dailyTimeSeries")
-			.Append("?startDate=").Append(startDate.ToString("yyyy-MM-dd"))
-			.Append("&endDate=").Append(endDate.ToString("yyyy-MM-dd"))
-			.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
-			.Append("&currencyIsoCode=").Append(currencyIsoCode)
-			.Append("&lang=").Append(language)
-			.ToString());
+		return await GetModel<DailyTimeSeriesModel>(
+			$"dailyTimeSeries?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}");
 	}
 
 	/// <summary>
@@ -220,15 +195,8 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException"></exception>
 	public async Task<MonthlyTimeSeriesModel> GetMonthlyTimeSeries(int startMonth, int startYear, int endMonth, int endYear, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetModel<MonthlyTimeSeriesModel>(new StringBuilder("monthlyTimeSeries")
-			.Append("?startMonth=").Append(startMonth)
-			.Append("&startYear=").Append(startYear)
-			.Append("&endMonth=").Append(endMonth)
-			.Append("&endYear=").Append(endYear)
-			.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
-			.Append("&currencyIsoCode=").Append(currencyIsoCode)
-			.Append("&lang=").Append(language)
-			.ToString());
+		return await GetModel<MonthlyTimeSeriesModel>(
+			$"monthlyTimeSeries?startMonth={startMonth}&startYear={startYear}&endMonth={endMonth}&endYear={endYear}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}");
 	}
 
 	/// <summary>
@@ -243,13 +211,8 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException"></exception>
 	public async Task<AnnualTimeSeriesModel> GetAnnualTimeSeries(int startYear, int endYear, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetModel<AnnualTimeSeriesModel>(new StringBuilder("annualTimeSeries")
-			.Append("?startYear=").Append(startYear)
-			.Append("&endYear=").Append(endYear)
-			.Append("&baseCurrencyIsoCode=").Append(baseCurrencyIsoCode)
-			.Append("&currencyIsoCode=").Append(currencyIsoCode)
-			.Append("&lang=").Append(language)
-			.ToString());
+		return await GetModel<AnnualTimeSeriesModel>(
+			$"annualTimeSeries?startYear={startYear}&endYear={endYear}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}");
 	}
 
 	/// <summary>
@@ -263,6 +226,11 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 		return await GetModel<CurrenciesModel>($"currencies?lang={language}");
 	}
 
+	private static string FormatBaseCurrencyIsoCodes(IEnumerable<string> baseCurrencyIsoCodes)
+	{
+		return baseCurrencyIsoCodes.Aggregate(string.Empty, (s, code) => $"{s}&baseCurrencyIsoCode={code}");
+	}
+	
 	private async Task<T> GetModel<T>(string requestUri)
 	{
 		var response = await GetAsync(requestUri);
