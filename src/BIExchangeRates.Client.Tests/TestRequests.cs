@@ -32,7 +32,10 @@ public class TestRequests
 {
 	private const string BaseAddress = "https://tassidicambio.bancaditalia.it/terzevalute-wf-web/rest/v1.0/";
 
-	private static readonly HttpResponseMessage DefaultResponseMessage = new() { Content = new StringContent("{}") };
+	private static HttpResponseMessage CreateDefaultResponseMessage()
+	{
+		return new() { Content = new StringContent("{}") };
+	}
 
 	[Theory]
 	[InlineData(Language.En, BaseAddress + "latestRates?lang=En")]
@@ -47,7 +50,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -69,7 +72,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -93,7 +96,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -115,7 +118,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -139,7 +142,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -161,7 +164,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -185,7 +188,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -208,7 +211,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -231,7 +234,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -254,7 +257,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);
@@ -275,7 +278,7 @@ public class TestRequests
 
 					Assert.Equal(expectedRequestUri, request.RequestUri?.ToString());
 
-					return DefaultResponseMessage;
+					return CreateDefaultResponseMessage();
 				}
 			)
 		);

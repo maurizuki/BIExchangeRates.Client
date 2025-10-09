@@ -25,6 +25,7 @@ using BIExchangeRates.Client.Data;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -230,20 +231,20 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	{
 		return baseCurrencyIsoCodes.Aggregate(string.Empty, (s, code) => $"{s}&baseCurrencyIsoCode={code}");
 	}
-	
+
 	private async Task<T> GetModel<T>(string requestUri)
 	{
-		var response = await GetAsync(requestUri);
-		var content = await response.Content?.ReadAsStringAsync() ?? string.Empty;
+		var response = await GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
 
 		if (!response.IsSuccessStatusCode)
 		{
 			throw new HttpRequestException(
-				$"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}). Response content: {content}");
+				$"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}). Response content: {await response.Content.ReadAsStringAsync()}");
 		}
-		
-		return JsonConvert.DeserializeObject<T>(
-			content, 
-			new JsonSerializerSettings { Error = (sender, args) => args.ErrorContext.Handled = true });
+
+		var serializer = JsonSerializer.CreateDefault(new JsonSerializerSettings { Error = (sender, args) => args.ErrorContext.Handled = true });
+		using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
+		using var jsonReader = new JsonTextReader(textReader);
+		return serializer.Deserialize<T>(jsonReader);
 	}
 }
