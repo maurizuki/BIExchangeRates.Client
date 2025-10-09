@@ -232,19 +232,16 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 		return baseCurrencyIsoCodes.Aggregate(string.Empty, (s, code) => $"{s}&baseCurrencyIsoCode={code}");
 	}
 
+	private static readonly JsonSerializerSettings SerializerSettings = new()
+	{
+		Error = (sender, args) => args.ErrorContext.Handled = true
+	};
+
 	private async Task<T> GetModel<T>(string requestUri)
 	{
-		var response = await GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead);
-
-		if (!response.IsSuccessStatusCode)
-		{
-			throw new HttpRequestException(
-				$"Response status code does not indicate success: {(int)response.StatusCode} ({response.ReasonPhrase}). Response content: {await response.Content.ReadAsStringAsync()}");
-		}
-
-		var serializer = JsonSerializer.CreateDefault(new JsonSerializerSettings { Error = (sender, args) => args.ErrorContext.Handled = true });
+		var response = (await GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead)).EnsureSuccessStatusCode();
 		using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
 		using var jsonReader = new JsonTextReader(textReader);
-		return serializer.Deserialize<T>(jsonReader);
+		return JsonSerializer.CreateDefault(SerializerSettings).Deserialize<T>(jsonReader);
 	}
 }
