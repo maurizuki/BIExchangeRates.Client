@@ -18,7 +18,7 @@ Install-Package BIExchangeRates.Client
 
 More options are available on the [BIExchangeRates.Client page](https://www.nuget.org/packages/BIExchangeRates.Client) of the NuGet Gallery website.
 
-The console application BIExchangeRates.Console is intended as an example on how to use the REST API wrapper in a real scenario.
+The console application [BIExchangeRates.Console](./src/BIExchangeRates.Console) is intended as an example on how to use the REST API wrapper in a real scenario.
 
 ## Remarks
 
