@@ -26,39 +26,104 @@ using System.Collections.Generic;
 
 namespace BIExchangeRates.Client.Data;
 
+/// <summary>
+/// Contains the latest available exchange rates for all the valid currencies.
+/// </summary>
 public sealed class LatestRatesModel
 {
+	/// <summary>
+	/// Contains aggregated information about the results.
+	/// </summary>
 	public sealed class ResultsInfoModel
 	{
+		/// <summary>
+		/// Gets or sets the total amount of results.
+		/// </summary>
+		/// <returns>The total amount of results.</returns>
 		public int TotalRecords { get; set; }
 
+		/// <summary>
+		/// Gets or sets the time zone of the results.
+		/// </summary>
+		/// <returns>The time zone of the results.</returns>
 		public string TimezoneReference { get; set; }
 
+		/// <summary>
+		/// Gets or sets a notice about the results.
+		/// </summary>
+		/// <returns>A notice about the results.</returns>
 		public string Notice { get; set; }
 	}
 
+	/// <summary>
+	/// Gets or sets aggregated information about the results.
+	/// </summary>
+	/// <returns>The aggregated information about the results.</returns>
 	public ResultsInfoModel ResultsInfo { get; set; }
 
+	/// <summary>
+	/// Contains information about the latest exchange rate of a currency.
+	/// </summary>
 	public sealed class ExchangeRateModel
 	{
+		/// <summary>
+		/// Gets or sets the country of the currency.
+		/// </summary>
+		/// <returns>The country of the currency.</returns>
 		public string Country { get; set; }
 
+		/// <summary>
+		/// Gets or sets the currency name.
+		/// </summary>
+		/// <returns>The currency name.</returns>
 		public string Currency { get; set; }
 
+		/// <summary>
+		/// Gets or sets the ISO 4217 code of the currency.
+		/// </summary>
+		/// <returns>The ISO 4217 code of the currency.</returns>
 		public string IsoCode { get; set; }
 
+		/// <summary>
+		/// Gets or sets the unique identification code of the currency.
+		/// </summary>
+		/// <returns>The unique identification code of the currency.</returns>
 		public string UicCode { get; set; }
 
+		/// <summary>
+		/// Gets or sets the latest exchange rate of Euro.
+		/// </summary>
+		/// <returns>The latest exchange rate of Euro.</returns>
 		public double EurRate { get; set; }
 
+		/// <summary>
+		/// Gets or sets the latest exchange rate of US Dollar.
+		/// </summary>
+		/// <returns>The latest exchange rate of US Dollar.</returns>
 		public double UsdRate { get; set; }
 
+		/// <summary>
+		/// Gets or sets the exchange convention of US Dollar against the reference currency.
+		/// </summary>
+		/// <returns>The exchange convention of US Dollar against the reference currency.</returns>
 		public string UsdExchangeConvention { get; set; }
 
+		/// <summary>
+		/// Gets or sets the code of the exchange convention of US Dollar against the reference currency.
+		/// </summary>
+		/// <returns>The code of the exchange convention of US Dollar against the reference currency.</returns>
 		public string UsdExchangeConventionCode { get; set; }
 
+		/// <summary>
+		/// Gets or sets the reference date.
+		/// </summary>
+		/// <returns>The reference date.</returns>
 		public DateTime ReferenceDate { get; set; }
 	}
 
+	/// <summary>
+	/// Gets or sets the exchange rates.
+	/// </summary>
+	/// <returns>The exchange rates.</returns>
 	public IEnumerable<ExchangeRateModel> LatestRates { get; set; }
 }

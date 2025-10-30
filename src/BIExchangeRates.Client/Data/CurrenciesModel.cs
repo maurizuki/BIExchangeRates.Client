@@ -26,40 +26,103 @@ using System.Collections.Generic;
 
 namespace BIExchangeRates.Client.Data;
 
+/// <summary>
+/// Contains the list of all the available currencies.
+/// </summary>
 public sealed class CurrenciesModel
 {
+	/// <summary>
+	/// Contains aggregated information about the results.
+	/// </summary>
 	public sealed class ResultsInfoModel
 	{
+		/// <summary>
+		/// Gets or sets the total amount of results.
+		/// </summary>
+		/// <returns>The total amount of results.</returns>
 		public int TotalRecords { get; set; }
 
+		/// <summary>
+		/// Gets or sets the time zone of the results.
+		/// </summary>
+		/// <returns>The time zone of the results.</returns>
 		public string TimezoneReference { get; set; }
 	}
 
+	/// <summary>
+	/// Gets or sets aggregated information about the results.
+	/// </summary>
+	/// <returns>The aggregated information about the results.</returns>
 	public ResultsInfoModel ResultsInfo { get; set; }
 
+	/// <summary>
+	/// Contains information about a currency.
+	/// </summary>
 	public sealed class CurrencyModel
 	{
+		/// <summary>
+		/// Contains information about the adoption of a currency in a country.
+		/// </summary>
 		public sealed class CountryModel
 		{
+			/// <summary>
+			/// Gets or sets the ISO 4217 code of the currency.
+			/// </summary>
+			/// <returns>The ISO 4217 code of the currency.</returns>
 			public string CurrencyIso { get; set; }
 
+			/// <summary>
+			/// Gets or sets the country name.
+			/// </summary>
+			/// <returns>The country name.</returns>
 			public string Country { get; set; }
 
+			/// <summary>
+			/// Gets or sets the ISO 3166-1 alpha-3 code of the country.
+			/// </summary>
+			/// <returns>The ISO 3166-1 alpha-3 code of the country.</returns>
 			public string CountryIso { get; set; }
 
+			/// <summary>
+			/// Gets or sets the validity start date.
+			/// </summary>
+			/// <returns>The validity start date.</returns>
 			public DateTime ValidityStartDate { get; set; }
 
+			/// <summary>
+			/// Gets or sets the validity end date.
+			/// </summary>
+			/// <returns>The validity end date.</returns>
 			public DateTime? ValidityEndDate { get; set; }
 		}
 
+		/// <summary>
+		/// Gets or sets the list of countries that adopt the currency.
+		/// </summary>
+		/// <returns>The list of countries that adopt the currency.</returns>
 		public IEnumerable<CountryModel> Countries { get; set; }
 
+		/// <summary>
+		/// Gets or sets the ISO 4217 code of the currency.
+		/// </summary>
+		/// <returns>The ISO 4217 code of the currency.</returns>
 		public string IsoCode { get; set; }
 
+		/// <summary>
+		/// Gets or sets the currency name.
+		/// </summary>
+		/// <returns>The currency name.</returns>
 		public string Name { get; set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool Graph { get; set; }
 	}
 
+	/// <summary>
+	/// Gets or sets the list of currencies.
+	/// </summary>
+	/// <returns>The list of currencies.</returns>
 	public IEnumerable<CurrencyModel> Currencies { get; set; }
 }
