@@ -38,5 +38,5 @@ public class GoodController : ApiController
 
 ## Documentation
 
-* [BIExchangeRates.Client 1.0 API Reference](https://github.com/maurizuki/BIExchangeRates.Client/wiki/BIExchangeRates.Client-1.0)
+* [BIExchangeRates.Client API Reference](./docs/BIExchangeRates.Client.md)
 * [Official REST API documentation](https://tassidicambio.bancaditalia.it/terzevalute-wf-ui-web/assets/files/Operating_Instructions.pdf)
