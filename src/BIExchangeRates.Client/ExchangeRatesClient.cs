@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BIExchangeRates.Client;
@@ -35,7 +36,7 @@ namespace BIExchangeRates.Client;
 /// <summary>
 /// Provides a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
 /// </summary>
-public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
+public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient, ICancellableExchangeRatesClient
 {
 	private static readonly Uri DefaultBaseAddress = new("https://tassidicambio.bancaditalia.it/terzevalute-wf-web/rest/v1.0/");
 
@@ -63,6 +64,8 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 		DefaultRequestHeaders.Add("Accept", "application/json");
 	}
 
+	#region GetLatestRates
+
 	/// <summary>
 	/// Returns the latest available exchange rates for all the valid currencies.
 	/// </summary>
@@ -71,8 +74,25 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<LatestRatesModel> GetLatestRates(Language language = Language.En)
 	{
-		return await GetModel<LatestRatesModel>($"latestRates?lang={language}");
+		return await GetLatestRates(CancellationToken.None, language);
 	}
+
+	/// <summary>
+	/// Returns the latest available exchange rates for all the valid currencies.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the latest available exchange rates for all the valid currencies.</returns>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<LatestRatesModel> GetLatestRates(CancellationToken cancellationToken, Language language = Language.En)
+	{
+		return await GetModel<LatestRatesModel>($"latestRates?lang={language}", cancellationToken);
+	}
+
+	#endregion
+
+	#region GetDailyRates
 
 	/// <summary>
 	/// Returns the daily exchange rates for a specific date for all the available currencies.
@@ -84,7 +104,7 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<DailyRatesModel> GetDailyRates(DateTime referenceDate, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetDailyRates(referenceDate, [], currencyIsoCode, language);
+		return await GetDailyRates(CancellationToken.None, referenceDate, [], currencyIsoCode, language);
 	}
 
 	/// <summary>
@@ -99,10 +119,47 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<DailyRatesModel> GetDailyRates(DateTime referenceDate, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
 	{
+		return await GetDailyRates(CancellationToken.None, referenceDate, baseCurrencyIsoCodes, currencyIsoCode, language);
+	}
+
+	/// <summary>
+	/// Returns the daily exchange rates for a specific date for all the available currencies.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="referenceDate">The reference date for the exchange rates.</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the daily exchange rates for a specific date for all the available currencies.</returns>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<DailyRatesModel> GetDailyRates(CancellationToken cancellationToken, DateTime referenceDate, string currencyIsoCode, Language language = Language.En)
+	{
+		return await GetDailyRates(cancellationToken, referenceDate, [], currencyIsoCode, language);
+	}
+
+	/// <summary>
+	/// Returns the daily exchange rates for a specific date for a list of currencies.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="referenceDate">The reference date for the exchange rates.</param>
+	/// <param name="baseCurrencyIsoCodes">The list of ISO 4217 codes of the required currencies (case insensitive).</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the daily exchange rates for a specific date for a list of currencies.</returns>
+	/// <exception cref="ArgumentNullException">The parameter <paramref name="baseCurrencyIsoCodes"/> is <c>null</c>.</exception>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<DailyRatesModel> GetDailyRates(CancellationToken cancellationToken, DateTime referenceDate, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
+	{
 		if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 		return await GetModel<DailyRatesModel>(
-			$"dailyRates?referenceDate={referenceDate:yyyy-MM-dd}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}");
+			$"dailyRates?referenceDate={referenceDate:yyyy-MM-dd}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}",
+			cancellationToken);
 	}
+
+	#endregion
+
+	#region GetMonthlyAverageRates
 
 	/// <summary>
 	/// Returns the monthly average exchange rates for specific month and year for all the available currencies.
@@ -115,7 +172,7 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<MonthlyAverageRatesModel> GetMonthlyAverageRates(int month, int year, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetMonthlyAverageRates(month, year, [], currencyIsoCode, language);
+		return await GetMonthlyAverageRates(CancellationToken.None, month, year, [], currencyIsoCode, language);
 	}
 
 	/// <summary>
@@ -131,10 +188,49 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<MonthlyAverageRatesModel> GetMonthlyAverageRates(int month, int year, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
 	{
+		return await GetMonthlyAverageRates(CancellationToken.None, month, year, baseCurrencyIsoCodes, currencyIsoCode, language);
+	}
+
+	/// <summary>
+	/// Returns the monthly average exchange rates for specific month and year for all the available currencies.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="month">The reference month for the exchange rates (1-12).</param>
+	/// <param name="year">The reference year for the exchange rates.</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the monthly average exchange rates for specific month and year for all the available currencies.</returns>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<MonthlyAverageRatesModel> GetMonthlyAverageRates(CancellationToken cancellationToken, int month, int year, string currencyIsoCode, Language language = Language.En)
+	{
+		return await GetMonthlyAverageRates(cancellationToken, month, year, [], currencyIsoCode, language);
+	}
+
+	/// <summary>
+	/// Returns the monthly average exchange rates for specific month and year for a list of currencies.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="month">The reference month for the exchange rates (1-12).</param>
+	/// <param name="year">The reference year for the exchange rates.</param>
+	/// <param name="baseCurrencyIsoCodes">The list of ISO 4217 codes of the required currencies (case insensitive).</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the monthly average exchange rates for specific month and year for a list of currencies.</returns>
+	/// <exception cref="ArgumentNullException">The parameter <paramref name="baseCurrencyIsoCodes"/> is <c>null</c>.</exception>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<MonthlyAverageRatesModel> GetMonthlyAverageRates(CancellationToken cancellationToken, int month, int year, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
+	{
 		if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 		return await GetModel<MonthlyAverageRatesModel>(
-			$"monthlyAverageRates?month={month}&year={year}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}");
+			$"monthlyAverageRates?month={month}&year={year}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}",
+			cancellationToken);
 	}
+
+	#endregion
+
+	#region GetAnnualAverageRates
 
 	/// <summary>
 	/// Returns the annual average exchange rates for a specific year for all the available currencies.
@@ -146,7 +242,7 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<AnnualAverageRatesModel> GetAnnualAverageRates(int year, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetAnnualAverageRates(year, [], currencyIsoCode, language);
+		return await GetAnnualAverageRates(CancellationToken.None, year, [], currencyIsoCode, language);
 	}
 
 	/// <summary>
@@ -161,10 +257,47 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<AnnualAverageRatesModel> GetAnnualAverageRates(int year, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
 	{
+		return await GetAnnualAverageRates(CancellationToken.None, year, baseCurrencyIsoCodes, currencyIsoCode, language);
+	}
+
+	/// <summary>
+	/// Returns the annual average exchange rates for a specific year for all the available currencies.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="year">The reference year for the exchange rates.</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the annual average exchange rates for a specific year for all the available currencies.</returns>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<AnnualAverageRatesModel> GetAnnualAverageRates(CancellationToken cancellationToken, int year, string currencyIsoCode, Language language = Language.En)
+	{
+		return await GetAnnualAverageRates(cancellationToken, year, [], currencyIsoCode, language);
+	}
+
+	/// <summary>
+	/// Returns the annual average exchange rates for a specific year for a list of currencies.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="year">The reference year for the exchange rates.</param>
+	/// <param name="baseCurrencyIsoCodes">The list of ISO 4217 codes of the required currencies (case insensitive).</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the annual average exchange rates for a specific year for a list of currencies.</returns>
+	/// <exception cref="ArgumentNullException">The parameter <paramref name="baseCurrencyIsoCodes"/> is <c>null</c>.</exception>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<AnnualAverageRatesModel> GetAnnualAverageRates(CancellationToken cancellationToken, int year, IEnumerable<string> baseCurrencyIsoCodes, string currencyIsoCode, Language language = Language.En)
+	{
 		if (baseCurrencyIsoCodes is null) throw new ArgumentNullException(nameof(baseCurrencyIsoCodes));
 		return await GetModel<AnnualAverageRatesModel>(
-			$"annualAverageRates?year={year}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}");
+			$"annualAverageRates?year={year}{FormatBaseCurrencyIsoCodes(baseCurrencyIsoCodes)}&currencyIsoCode={currencyIsoCode}&lang={language}",
+			cancellationToken);
 	}
+
+	#endregion
+
+	#region GetDailyTimeSeries
 
 	/// <summary>
 	/// Returns the daily exchange rates of a currency for a specific date range.
@@ -178,9 +311,31 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<DailyTimeSeriesModel> GetDailyTimeSeries(DateTime startDate, DateTime endDate, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetModel<DailyTimeSeriesModel>(
-			$"dailyTimeSeries?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}");
+		return await GetDailyTimeSeries(CancellationToken.None, startDate, endDate, baseCurrencyIsoCode, currencyIsoCode, language);
 	}
+
+	/// <summary>
+	/// Returns the daily exchange rates of a currency for a specific date range.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="startDate">The start date of the range for the exchange rates.</param>
+	/// <param name="endDate">The end date of the range for the exchange rates.</param>
+	/// <param name="baseCurrencyIsoCode">The ISO 4217 code of the required currency (case insensitive).</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the daily exchange rates of a currency for a specific date range.</returns>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<DailyTimeSeriesModel> GetDailyTimeSeries(CancellationToken cancellationToken, DateTime startDate, DateTime endDate, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
+	{
+		return await GetModel<DailyTimeSeriesModel>(
+			$"dailyTimeSeries?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}",
+			cancellationToken);
+	}
+
+	#endregion
+
+	#region GetMonthlyTimeSeries
 
 	/// <summary>
 	/// Returns the monthly average exchange rates of a currency for a specific month range.
@@ -196,9 +351,33 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<MonthlyTimeSeriesModel> GetMonthlyTimeSeries(int startMonth, int startYear, int endMonth, int endYear, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetModel<MonthlyTimeSeriesModel>(
-			$"monthlyTimeSeries?startMonth={startMonth}&startYear={startYear}&endMonth={endMonth}&endYear={endYear}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}");
+		return await GetMonthlyTimeSeries(CancellationToken.None, startMonth, startYear, endMonth, endYear, baseCurrencyIsoCode,currencyIsoCode, language);
 	}
+
+	/// <summary>
+	/// Returns the monthly average exchange rates of a currency for a specific month range.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="startMonth">The start month of the range for the exchange rates (1-12).</param>
+	/// <param name="startYear">The start year of the range for the exchange rates.</param>
+	/// <param name="endMonth">The end month of the range for the exchange rates (1-12).</param>
+	/// <param name="endYear">The end year of the range for the exchange rates.</param>
+	/// <param name="baseCurrencyIsoCode">The ISO 4217 code of the required currency (case insensitive).</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the monthly average exchange rates of a currency for a specific month range.</returns>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<MonthlyTimeSeriesModel> GetMonthlyTimeSeries(CancellationToken cancellationToken, int startMonth, int startYear, int endMonth, int endYear, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
+	{
+		return await GetModel<MonthlyTimeSeriesModel>(
+			$"monthlyTimeSeries?startMonth={startMonth}&startYear={startYear}&endMonth={endMonth}&endYear={endYear}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}",
+			cancellationToken);
+	}
+
+	#endregion
+
+	#region GetAnnualTimeSeries
 
 	/// <summary>
 	/// Returns the annual average exchange rates of a currency for a specific year range.
@@ -212,9 +391,31 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<AnnualTimeSeriesModel> GetAnnualTimeSeries(int startYear, int endYear, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
 	{
-		return await GetModel<AnnualTimeSeriesModel>(
-			$"annualTimeSeries?startYear={startYear}&endYear={endYear}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}");
+		return await GetAnnualTimeSeries(CancellationToken.None, startYear, endYear, baseCurrencyIsoCode, currencyIsoCode, language);
 	}
+
+	/// <summary>
+	/// Returns the annual average exchange rates of a currency for a specific year range.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="startYear">The start year of the range for the exchange rates.</param>
+	/// <param name="endYear">The end year of the range for the exchange rates.</param>
+	/// <param name="baseCurrencyIsoCode">The ISO 4217 code of the required currency (case insensitive).</param>
+	/// <param name="currencyIsoCode">The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive).</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the annual average exchange rates of a currency for a specific year range.</returns>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<AnnualTimeSeriesModel> GetAnnualTimeSeries(CancellationToken cancellationToken, int startYear, int endYear, string baseCurrencyIsoCode, string currencyIsoCode, Language language = Language.En)
+	{
+		return await GetModel<AnnualTimeSeriesModel>(
+			$"annualTimeSeries?startYear={startYear}&endYear={endYear}&baseCurrencyIsoCode={baseCurrencyIsoCode}&currencyIsoCode={currencyIsoCode}&lang={language}",
+			cancellationToken);
+	}
+
+	#endregion
+
+	#region GetCurrencies
 
 	/// <summary>
 	/// Returns the list of all the available currencies.
@@ -224,8 +425,23 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
 	public async Task<CurrenciesModel> GetCurrencies(Language language = Language.En)
 	{
-		return await GetModel<CurrenciesModel>($"currencies?lang={language}");
+		return await GetCurrencies(CancellationToken.None, language);
 	}
+
+	/// <summary>
+	/// Returns the list of all the available currencies.
+	/// </summary>
+	/// <param name="cancellationToken">A cancellation token that can be used to receive notice of cancellation.</param>
+	/// <param name="language">The language of the returned data.</param>
+	/// <returns>A task that represents the asynchronous operation. The task result contains the list of all the available currencies.</returns>
+	/// <exception cref="HttpRequestException">The response status code does not indicate success.</exception>
+	/// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
+	public async Task<CurrenciesModel> GetCurrencies(CancellationToken cancellationToken, Language language = Language.En)
+	{
+		return await GetModel<CurrenciesModel>($"currencies?lang={language}", cancellationToken);
+	}
+
+	#endregion
 
 	private static string FormatBaseCurrencyIsoCodes(IEnumerable<string> baseCurrencyIsoCodes)
 	{
@@ -237,11 +453,12 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 		Error = (sender, args) => args.ErrorContext.Handled = true
 	};
 
-	private async Task<T> GetModel<T>(string requestUri)
+	private async Task<T> GetModel<T>(string requestUri, CancellationToken cancellationToken)
 	{
-		var response = (await GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead)).EnsureSuccessStatusCode();
+		var response = (await GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken)).EnsureSuccessStatusCode();
 		using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
 		using var jsonReader = new JsonTextReader(textReader);
+		cancellationToken.ThrowIfCancellationRequested();
 		return JsonSerializer.CreateDefault(SerializerSettings).Deserialize<T>(jsonReader);
 	}
 }
