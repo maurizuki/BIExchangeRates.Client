@@ -456,7 +456,11 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient, ICan
 	private async Task<T> GetModel<T>(string requestUri, CancellationToken cancellationToken)
 	{
 		var response = (await GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken)).EnsureSuccessStatusCode();
-		using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync());
+		using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync(
+#if NET5_0_OR_GREATER
+			cancellationToken
+#endif
+		));
 		using var jsonReader = new JsonTextReader(textReader);
 		cancellationToken.ThrowIfCancellationRequested();
 		return JsonSerializer.CreateDefault(SerializerSettings).Deserialize<T>(jsonReader);
