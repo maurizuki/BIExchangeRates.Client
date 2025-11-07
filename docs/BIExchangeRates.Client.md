@@ -5,7 +5,8 @@
 | public type | description |
 | --- | --- |
 | class [ExchangeRatesClient](./BIExchangeRates.Client/ExchangeRatesClient.md) | Provides a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it). |
-| interface [IExchangeRatesClient](./BIExchangeRates.Client/IExchangeRatesClient.md) | Defines a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it). |
+| interface [ICancellableExchangeRatesClient](./BIExchangeRates.Client/ICancellableExchangeRatesClient.md) | Defines methods to access the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it). All methods accept a cancellation token that can be used to receive notice of cancellation. |
+| interface [IExchangeRatesClient](./BIExchangeRates.Client/IExchangeRatesClient.md) | Defines methods to access the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it). |
 | enum [Language](./BIExchangeRates.Client/Language.md) | Specifies the language of the results. |
 
 ## BIExchangeRates.Client.Data namespace

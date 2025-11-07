@@ -1,4 +1,4 @@
-# ExchangeRatesClient.GetCurrencies method
+# ExchangeRatesClient.GetCurrencies method (1 of 2)
 
 Returns the list of all the available currencies.
 
@@ -19,6 +19,40 @@ A task that represents the asynchronous operation. The task result contains the 
 | exception | condition |
 | --- | --- |
 | HttpRequestException | The response status code does not indicate success. |
+
+## See Also
+
+* class [CurrenciesModel](../../BIExchangeRates.Client.Data/CurrenciesModel.md)
+* enum [Language](../Language.md)
+* class [ExchangeRatesClient](../ExchangeRatesClient.md)
+* namespace [BIExchangeRates.Client](../../BIExchangeRates.Client.md)
+
+---
+
+# ExchangeRatesClient.GetCurrencies method (2 of 2)
+
+Returns the list of all the available currencies.
+
+```csharp
+public Task<CurrenciesModel> GetCurrencies(CancellationToken cancellationToken, 
+    Language language = Language.En)
+```
+
+| parameter | description |
+| --- | --- |
+| cancellationToken | A cancellation token that can be used to receive notice of cancellation. |
+| language | The language of the returned data. |
+
+## Return Value
+
+A task that represents the asynchronous operation. The task result contains the list of all the available currencies.
+
+## Exceptions
+
+| exception | condition |
+| --- | --- |
+| HttpRequestException | The response status code does not indicate success. |
+| OperationCanceledException | The cancellation token was canceled. |
 
 ## See Also
 

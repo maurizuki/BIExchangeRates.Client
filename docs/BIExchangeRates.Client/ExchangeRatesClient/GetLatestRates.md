@@ -1,4 +1,4 @@
-# ExchangeRatesClient.GetLatestRates method
+# ExchangeRatesClient.GetLatestRates method (1 of 2)
 
 Returns the latest available exchange rates for all the valid currencies.
 
@@ -19,6 +19,40 @@ A task that represents the asynchronous operation. The task result contains the 
 | exception | condition |
 | --- | --- |
 | HttpRequestException | The response status code does not indicate success. |
+
+## See Also
+
+* class [LatestRatesModel](../../BIExchangeRates.Client.Data/LatestRatesModel.md)
+* enum [Language](../Language.md)
+* class [ExchangeRatesClient](../ExchangeRatesClient.md)
+* namespace [BIExchangeRates.Client](../../BIExchangeRates.Client.md)
+
+---
+
+# ExchangeRatesClient.GetLatestRates method (2 of 2)
+
+Returns the latest available exchange rates for all the valid currencies.
+
+```csharp
+public Task<LatestRatesModel> GetLatestRates(CancellationToken cancellationToken, 
+    Language language = Language.En)
+```
+
+| parameter | description |
+| --- | --- |
+| cancellationToken | A cancellation token that can be used to receive notice of cancellation. |
+| language | The language of the returned data. |
+
+## Return Value
+
+A task that represents the asynchronous operation. The task result contains the latest available exchange rates for all the valid currencies.
+
+## Exceptions
+
+| exception | condition |
+| --- | --- |
+| HttpRequestException | The response status code does not indicate success. |
+| OperationCanceledException | The cancellation token was canceled. |
 
 ## See Also
 

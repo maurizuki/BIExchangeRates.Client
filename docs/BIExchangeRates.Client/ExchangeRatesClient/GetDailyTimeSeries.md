@@ -1,4 +1,4 @@
-# ExchangeRatesClient.GetDailyTimeSeries method
+# ExchangeRatesClient.GetDailyTimeSeries method (1 of 2)
 
 Returns the daily exchange rates of a currency for a specific date range.
 
@@ -24,6 +24,45 @@ A task that represents the asynchronous operation. The task result contains the 
 | exception | condition |
 | --- | --- |
 | HttpRequestException | The response status code does not indicate success. |
+
+## See Also
+
+* class [DailyTimeSeriesModel](../../BIExchangeRates.Client.Data/DailyTimeSeriesModel.md)
+* enum [Language](../Language.md)
+* class [ExchangeRatesClient](../ExchangeRatesClient.md)
+* namespace [BIExchangeRates.Client](../../BIExchangeRates.Client.md)
+
+---
+
+# ExchangeRatesClient.GetDailyTimeSeries method (2 of 2)
+
+Returns the daily exchange rates of a currency for a specific date range.
+
+```csharp
+public Task<DailyTimeSeriesModel> GetDailyTimeSeries(CancellationToken cancellationToken, 
+    DateTime startDate, DateTime endDate, string baseCurrencyIsoCode, string currencyIsoCode, 
+    Language language = Language.En)
+```
+
+| parameter | description |
+| --- | --- |
+| cancellationToken | A cancellation token that can be used to receive notice of cancellation. |
+| startDate | The start date of the range for the exchange rates. |
+| endDate | The end date of the range for the exchange rates. |
+| baseCurrencyIsoCode | The ISO 4217 code of the required currency (case insensitive). |
+| currencyIsoCode | The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive). |
+| language | The language of the returned data. |
+
+## Return Value
+
+A task that represents the asynchronous operation. The task result contains the daily exchange rates of a currency for a specific date range.
+
+## Exceptions
+
+| exception | condition |
+| --- | --- |
+| HttpRequestException | The response status code does not indicate success. |
+| OperationCanceledException | The cancellation token was canceled. |
 
 ## See Also
 

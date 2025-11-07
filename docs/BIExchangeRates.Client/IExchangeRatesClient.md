@@ -1,6 +1,6 @@
 # IExchangeRatesClient interface
 
-Defines a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
+Defines methods to access the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
 
 ```csharp
 public interface IExchangeRatesClient

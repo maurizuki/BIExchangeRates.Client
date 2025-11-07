@@ -1,4 +1,4 @@
-# ExchangeRatesClient.GetMonthlyTimeSeries method
+# ExchangeRatesClient.GetMonthlyTimeSeries method (1 of 2)
 
 Returns the monthly average exchange rates of a currency for a specific month range.
 
@@ -27,6 +27,47 @@ A task that represents the asynchronous operation. The task result contains the 
 | exception | condition |
 | --- | --- |
 | HttpRequestException | The response status code does not indicate success. |
+
+## See Also
+
+* class [MonthlyTimeSeriesModel](../../BIExchangeRates.Client.Data/MonthlyTimeSeriesModel.md)
+* enum [Language](../Language.md)
+* class [ExchangeRatesClient](../ExchangeRatesClient.md)
+* namespace [BIExchangeRates.Client](../../BIExchangeRates.Client.md)
+
+---
+
+# ExchangeRatesClient.GetMonthlyTimeSeries method (2 of 2)
+
+Returns the monthly average exchange rates of a currency for a specific month range.
+
+```csharp
+public Task<MonthlyTimeSeriesModel> GetMonthlyTimeSeries(CancellationToken cancellationToken, 
+    int startMonth, int startYear, int endMonth, int endYear, string baseCurrencyIsoCode, 
+    string currencyIsoCode, Language language = Language.En)
+```
+
+| parameter | description |
+| --- | --- |
+| cancellationToken | A cancellation token that can be used to receive notice of cancellation. |
+| startMonth | The start month of the range for the exchange rates (1-12). |
+| startYear | The start year of the range for the exchange rates. |
+| endMonth | The end month of the range for the exchange rates (1-12). |
+| endYear | The end year of the range for the exchange rates. |
+| baseCurrencyIsoCode | The ISO 4217 code of the required currency (case insensitive). |
+| currencyIsoCode | The ISO 4217 code of the reference currency ("EUR", "USD" or "ITL", case insensitive). |
+| language | The language of the returned data. |
+
+## Return Value
+
+A task that represents the asynchronous operation. The task result contains the monthly average exchange rates of a currency for a specific month range.
+
+## Exceptions
+
+| exception | condition |
+| --- | --- |
+| HttpRequestException | The response status code does not indicate success. |
+| OperationCanceledException | The cancellation token was canceled. |
 
 ## See Also
 

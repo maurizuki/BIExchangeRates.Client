@@ -3,7 +3,8 @@
 Provides a wrapper for the REST API of the currency exchange rates of Banca d'Italia (https://tassidicambio.bancaditalia.it).
 
 ```csharp
-public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
+public sealed class ExchangeRatesClient : HttpClient, ICancellableExchangeRatesClient, 
+    IExchangeRatesClient
 ```
 
 ## Public Members
@@ -12,17 +13,18 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient
 | --- | --- |
 | [ExchangeRatesClient](ExchangeRatesClient/ExchangeRatesClient.md)() | Initializes a new instance of the ExchangeRatesClient class using a HttpClientHandler that is disposed when this instance is disposed. |
 | [ExchangeRatesClient](ExchangeRatesClient/ExchangeRatesClient.md)(…) | Initializes a new instance of the ExchangeRatesClient class with the specified handler. The handler is disposed when this instance is disposed. (2 constructors) |
-| [GetAnnualAverageRates](ExchangeRatesClient/GetAnnualAverageRates.md)(…) | Returns the annual average exchange rates for a specific year for all the available currencies. (2 methods) |
-| [GetAnnualTimeSeries](ExchangeRatesClient/GetAnnualTimeSeries.md)(…) | Returns the annual average exchange rates of a currency for a specific year range. |
-| [GetCurrencies](ExchangeRatesClient/GetCurrencies.md)(…) | Returns the list of all the available currencies. |
-| [GetDailyRates](ExchangeRatesClient/GetDailyRates.md)(…) | Returns the daily exchange rates for a specific date for all the available currencies. (2 methods) |
-| [GetDailyTimeSeries](ExchangeRatesClient/GetDailyTimeSeries.md)(…) | Returns the daily exchange rates of a currency for a specific date range. |
-| [GetLatestRates](ExchangeRatesClient/GetLatestRates.md)(…) | Returns the latest available exchange rates for all the valid currencies. |
-| [GetMonthlyAverageRates](ExchangeRatesClient/GetMonthlyAverageRates.md)(…) | Returns the monthly average exchange rates for specific month and year for all the available currencies. (2 methods) |
-| [GetMonthlyTimeSeries](ExchangeRatesClient/GetMonthlyTimeSeries.md)(…) | Returns the monthly average exchange rates of a currency for a specific month range. |
+| [GetAnnualAverageRates](ExchangeRatesClient/GetAnnualAverageRates.md)(…) | Returns the annual average exchange rates for a specific year for all the available currencies. (4 methods) |
+| [GetAnnualTimeSeries](ExchangeRatesClient/GetAnnualTimeSeries.md)(…) | Returns the annual average exchange rates of a currency for a specific year range. (2 methods) |
+| [GetCurrencies](ExchangeRatesClient/GetCurrencies.md)(…) | Returns the list of all the available currencies. (2 methods) |
+| [GetDailyRates](ExchangeRatesClient/GetDailyRates.md)(…) | Returns the daily exchange rates for a specific date for all the available currencies. (4 methods) |
+| [GetDailyTimeSeries](ExchangeRatesClient/GetDailyTimeSeries.md)(…) | Returns the daily exchange rates of a currency for a specific date range. (2 methods) |
+| [GetLatestRates](ExchangeRatesClient/GetLatestRates.md)(…) | Returns the latest available exchange rates for all the valid currencies. (2 methods) |
+| [GetMonthlyAverageRates](ExchangeRatesClient/GetMonthlyAverageRates.md)(…) | Returns the monthly average exchange rates for specific month and year for all the available currencies. (4 methods) |
+| [GetMonthlyTimeSeries](ExchangeRatesClient/GetMonthlyTimeSeries.md)(…) | Returns the monthly average exchange rates of a currency for a specific month range. (2 methods) |
 
 ## See Also
 
+* interface [ICancellableExchangeRatesClient](./ICancellableExchangeRatesClient.md)
 * interface [IExchangeRatesClient](./IExchangeRatesClient.md)
 * namespace [BIExchangeRates.Client](../BIExchangeRates.Client.md)
 
