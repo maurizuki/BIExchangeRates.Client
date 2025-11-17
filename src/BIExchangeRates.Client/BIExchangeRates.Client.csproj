@@ -9,7 +9,7 @@
     <PackageTags>currency currency-exchange currency-rates exchange-rates currency-exchange-rates banca-italia central-bank-of-italy bank-of-italy</PackageTags>
     <RepositoryUrl>https://github.com/maurizuki/BIExchangeRates.Client</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.2.0-rc.1</Version>
+    <Version>1.2.0</Version>
     <Title>BIExchangeRates.Client</Title>
     <PackageProjectUrl>https://github.com/maurizuki/BIExchangeRates.Client</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
