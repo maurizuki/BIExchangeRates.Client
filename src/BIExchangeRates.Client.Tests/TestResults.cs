@@ -38,38 +38,41 @@ public class TestResults
 	public async Task GetLatestRates(string eurRate, string usdRate, double expectedEurRate, double expectedUsdRate)
 	{
 		var client = new ExchangeRatesClient(
-			new CustomHttpMessageHandler(
-				_ => new HttpResponseMessage
+			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
-					Content = new StringContent(JsonConvert.SerializeObject(new
-					{
-						resultsInfo = new
-						{
-							totalRecords = 1,
-							timezoneReference = "timezoneReference",
-							notice = "notice",
-						},
-						latestRates = new object[]
-						{
+					Content = new StringContent(
+						JsonConvert.SerializeObject(
 							new
 							{
-								currency = "currency",
-								country = "country",
-								isoCode = "isoCode",
-								uicCode = "uicCode",
-								eurRate,
-								usdRate,
-								usdExchangeConvention = "usdExchangeConvention",
-								usdExchangeConventionCode = "usdExchangeConventionCode",
-								referenceDate = "2020-01-02",
+								resultsInfo = new
+								{
+									totalRecords = 1,
+									timezoneReference = "timezoneReference",
+									notice = "notice",
+								},
+								latestRates = new object[]
+								{
+									new
+									{
+										currency = "currency",
+										country = "country",
+										isoCode = "isoCode",
+										uicCode = "uicCode",
+										eurRate,
+										usdRate,
+										usdExchangeConvention = "usdExchangeConvention",
+										usdExchangeConventionCode = "usdExchangeConventionCode",
+										referenceDate = "2020-01-02",
+									},
+								},
 							}
-						}
-					}))
+						)
+					),
 				}
 			)
 		);
 
-		var results = await client.GetLatestRates();
+		var results = await client.GetLatestRates(TestContext.Current.CancellationToken);
 		Assert.Equal(1, results.ResultsInfo.TotalRecords);
 		Assert.Equal("timezoneReference", results.ResultsInfo.TimezoneReference);
 		Assert.Equal("notice", results.ResultsInfo.Notice);
@@ -92,36 +95,39 @@ public class TestResults
 	public async Task GetDailyRates(string avgRate, double expectedAvgRate)
 	{
 		var client = new ExchangeRatesClient(
-			new CustomHttpMessageHandler(
-				_ => new HttpResponseMessage
+			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
-					Content = new StringContent(JsonConvert.SerializeObject(new
-					{
-						resultsInfo = new
-						{
-							totalRecords = 1,
-							timezoneReference = "timezoneReference",
-						},
-						rates = new object[]
-						{
+					Content = new StringContent(
+						JsonConvert.SerializeObject(
 							new
 							{
-								currency = "currency",
-								country = "country",
-								isoCode = "isoCode",
-								uicCode = "uicCode",
-								avgRate,
-								exchangeConvention = "exchangeConvention",
-								exchangeConventionCode = "exchangeConventionCode",
-								referenceDate = "2020-01-02",
+								resultsInfo = new
+								{
+									totalRecords = 1,
+									timezoneReference = "timezoneReference",
+								},
+								rates = new object[]
+								{
+									new
+									{
+										currency = "currency",
+										country = "country",
+										isoCode = "isoCode",
+										uicCode = "uicCode",
+										avgRate,
+										exchangeConvention = "exchangeConvention",
+										exchangeConventionCode = "exchangeConventionCode",
+										referenceDate = "2020-01-02",
+									},
+								},
 							}
-						}
-					}))
+						)
+					),
 				}
 			)
 		);
 
-		var results = await client.GetDailyRates(DateTime.MinValue, "EUR");
+		var results = await client.GetDailyRates(TestContext.Current.CancellationToken, DateTime.MinValue, "EUR");
 		Assert.Equal(1, results.ResultsInfo.TotalRecords);
 		Assert.Equal("timezoneReference", results.ResultsInfo.TimezoneReference);
 
@@ -142,36 +148,39 @@ public class TestResults
 	public async Task GetMonthlyAverageRates(string avgRate, double expectedAvgRate)
 	{
 		var client = new ExchangeRatesClient(
-			new CustomHttpMessageHandler(
-				_ => new HttpResponseMessage
+			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
-					Content = new StringContent(JsonConvert.SerializeObject(new
-					{
-						resultsInfo = new
-						{
-							totalRecords = 1,
-						},
-						rates = new object[]
-						{
+					Content = new StringContent(
+						JsonConvert.SerializeObject(
 							new
 							{
-								currency = "currency",
-								country = "country",
-								isoCode = "isoCode",
-								uicCode = "uicCode",
-								avgRate,
-								exchangeConvention = "exchangeConvention",
-								exchangeConventionCode = "exchangeConventionCode",
-								year = 2020,
-								month = 1,
+								resultsInfo = new
+								{
+									totalRecords = 1,
+								},
+								rates = new object[]
+								{
+									new
+									{
+										currency = "currency",
+										country = "country",
+										isoCode = "isoCode",
+										uicCode = "uicCode",
+										avgRate,
+										exchangeConvention = "exchangeConvention",
+										exchangeConventionCode = "exchangeConventionCode",
+										year = 2020,
+										month = 1,
+									},
+								},
 							}
-						}
-					}))
+						)
+					),
 				}
 			)
 		);
 
-		var results = await client.GetMonthlyAverageRates(1, 2020, "EUR");
+		var results = await client.GetMonthlyAverageRates(TestContext.Current.CancellationToken, 1, 2020, "EUR");
 		Assert.Equal(1, results.ResultsInfo.TotalRecords);
 
 		var rates = Assert.Single(results.Rates);
@@ -192,35 +201,38 @@ public class TestResults
 	public async Task GetAnnualAverageRates(string avgRate, double expectedAvgRate)
 	{
 		var client = new ExchangeRatesClient(
-			new CustomHttpMessageHandler(
-				_ => new HttpResponseMessage
+			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
-					Content = new StringContent(JsonConvert.SerializeObject(new
-					{
-						resultsInfo = new
-						{
-							totalRecords = 1,
-						},
-						rates = new object[]
-						{
+					Content = new StringContent(
+						JsonConvert.SerializeObject(
 							new
 							{
-								currency = "currency",
-								country = "country",
-								isoCode = "isoCode",
-								uicCode = "uicCode",
-								avgRate,
-								exchangeConvention = "exchangeConvention",
-								exchangeConventionCode = "exchangeConventionCode",
-								year = 2020,
+								resultsInfo = new
+								{
+									totalRecords = 1,
+								},
+								rates = new object[]
+								{
+									new
+									{
+										currency = "currency",
+										country = "country",
+										isoCode = "isoCode",
+										uicCode = "uicCode",
+										avgRate,
+										exchangeConvention = "exchangeConvention",
+										exchangeConventionCode = "exchangeConventionCode",
+										year = 2020,
+									},
+								},
 							}
-						}
-					}))
+						)
+					),
 				}
 			)
 		);
 
-		var results = await client.GetAnnualAverageRates(2020, "EUR");
+		var results = await client.GetAnnualAverageRates(TestContext.Current.CancellationToken, 2020, "EUR");
 		Assert.Equal(1, results.ResultsInfo.TotalRecords);
 
 		var rates = Assert.Single(results.Rates);
@@ -240,35 +252,38 @@ public class TestResults
 	public async Task GetDailyTimeSeries(string avgRate, double expectedAvgRate)
 	{
 		var client = new ExchangeRatesClient(
-			new CustomHttpMessageHandler(
-				_ => new HttpResponseMessage
+			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
-					Content = new StringContent(JsonConvert.SerializeObject(new
-					{
-						resultsInfo = new
-						{
-							totalRecords = 1,
-							timezoneReference = "timezoneReference",
-							currency = "currency",
-							isoCode = "isoCode",
-							uicCode = "uicCode",
-							exchangeConventionCode = "exchangeConventionCode",
-						},
-						rates = new object[]
-						{
+					Content = new StringContent(
+						JsonConvert.SerializeObject(
 							new
 							{
-								referenceDate = "2020-01-02",
-								avgRate,
-								exchangeConvention = "exchangeConvention",
+								resultsInfo = new
+								{
+									totalRecords = 1,
+									timezoneReference = "timezoneReference",
+									currency = "currency",
+									isoCode = "isoCode",
+									uicCode = "uicCode",
+									exchangeConventionCode = "exchangeConventionCode",
+								},
+								rates = new object[]
+								{
+									new
+									{
+										referenceDate = "2020-01-02",
+										avgRate,
+										exchangeConvention = "exchangeConvention",
+									},
+								},
 							}
-						}
-					}))
+						)
+					),
 				}
 			)
 		);
 
-		var results = await client.GetDailyTimeSeries(DateTime.MinValue, DateTime.MaxValue, "USD", "EUR");
+		var results = await client.GetDailyTimeSeries(TestContext.Current.CancellationToken, DateTime.MinValue, DateTime.MaxValue, "USD", "EUR");
 		Assert.Equal(1, results.ResultsInfo.TotalRecords);
 		Assert.Equal("timezoneReference", results.ResultsInfo.TimezoneReference);
 		Assert.Equal("currency", results.ResultsInfo.Currency);
@@ -288,34 +303,37 @@ public class TestResults
 	public async Task GetMonthlyTimeSeries(string avgRate, double expectedAvgRate)
 	{
 		var client = new ExchangeRatesClient(
-			new CustomHttpMessageHandler(
-				_ => new HttpResponseMessage
+			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
-					Content = new StringContent(JsonConvert.SerializeObject(new
-					{
-						resultsInfo = new
-						{
-							totalRecords = 1,
-							currency = "currency",
-							isoCode = "isoCode",
-							uicCode = "uicCode",
-							exchangeConventionCode = "exchangeConventionCode",
-						},
-						rates = new object[]
-						{
+					Content = new StringContent(
+						JsonConvert.SerializeObject(
 							new
 							{
-								referenceDate = "2020-01",
-								avgRate,
-								exchangeConvention = "exchangeConvention",
+								resultsInfo = new
+								{
+									totalRecords = 1,
+									currency = "currency",
+									isoCode = "isoCode",
+									uicCode = "uicCode",
+									exchangeConventionCode = "exchangeConventionCode",
+								},
+								rates = new object[]
+								{
+									new
+									{
+										referenceDate = "2020-01",
+										avgRate,
+										exchangeConvention = "exchangeConvention",
+									},
+								},
 							}
-						}
-					}))
+						)
+					),
 				}
 			)
 		);
 
-		var results = await client.GetMonthlyTimeSeries(1, 2020, 2, 2021, "USD", "EUR");
+		var results = await client.GetMonthlyTimeSeries(TestContext.Current.CancellationToken, 1, 2020, 2, 2021, "USD", "EUR");
 		Assert.Equal(1, results.ResultsInfo.TotalRecords);
 		Assert.Equal("currency", results.ResultsInfo.Currency);
 		Assert.Equal("isoCode", results.ResultsInfo.IsoCode);
@@ -334,34 +352,37 @@ public class TestResults
 	public async Task GetAnnualTimeSeries(string avgRate, double expectedAvgRate)
 	{
 		var client = new ExchangeRatesClient(
-			new CustomHttpMessageHandler(
-				_ => new HttpResponseMessage
+			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
-					Content = new StringContent(JsonConvert.SerializeObject(new
-					{
-						resultsInfo = new
-						{
-							totalRecords = 1,
-							currency = "currency",
-							isoCode = "isoCode",
-							uicCode = "uicCode",
-							exchangeConventionCode = "exchangeConventionCode",
-						},
-						rates = new object[]
-						{
+					Content = new StringContent(
+						JsonConvert.SerializeObject(
 							new
 							{
-								referenceDate = "2020",
-								avgRate,
-								exchangeConvention = "exchangeConvention",
+								resultsInfo = new
+								{
+									totalRecords = 1,
+									currency = "currency",
+									isoCode = "isoCode",
+									uicCode = "uicCode",
+									exchangeConventionCode = "exchangeConventionCode",
+								},
+								rates = new object[]
+								{
+									new
+									{
+										referenceDate = "2020",
+										avgRate,
+										exchangeConvention = "exchangeConvention",
+									},
+								},
 							}
-						}
-					}))
+						)
+					),
 				}
 			)
 		);
 
-		var results = await client.GetAnnualTimeSeries(2020, 2021, "USD", "EUR");
+		var results = await client.GetAnnualTimeSeries(TestContext.Current.CancellationToken, 2020, 2021, "USD", "EUR");
 		Assert.Equal(1, results.ResultsInfo.TotalRecords);
 		Assert.Equal("currency", results.ResultsInfo.Currency);
 		Assert.Equal("isoCode", results.ResultsInfo.IsoCode);
@@ -380,42 +401,45 @@ public class TestResults
 	public async Task GetCurrencies(string validityEndDate, string expectedValidityEndDate)
 	{
 		var client = new ExchangeRatesClient(
-			new CustomHttpMessageHandler(
-				_ => new HttpResponseMessage
+			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
-					Content = new StringContent(JsonConvert.SerializeObject(new
-					{
-						resultsInfo = new
-						{
-							totalRecords = 1,
-							timezoneReference = "timezoneReference",
-						},
-						currencies = new object[]
-						{
+					Content = new StringContent(
+						JsonConvert.SerializeObject(
 							new
 							{
-								countries = new object[]
+								resultsInfo = new
+								{
+									totalRecords = 1,
+									timezoneReference = "timezoneReference",
+								},
+								currencies = new object[]
 								{
 									new
 									{
-										currencyIso = "currencyIso",
-										country = "country",
-										countryIso = "countryIso",
-										validityStartDate = "2020-01-02",
-										validityEndDate
-									}
+										countries = new object[]
+										{
+											new
+											{
+												currencyIso = "currencyIso",
+												country = "country",
+												countryIso = "countryIso",
+												validityStartDate = "2020-01-02",
+												validityEndDate,
+											},
+										},
+										isoCode = "isoCode",
+										name = "name",
+										graph = true,
+									},
 								},
-								isoCode = "isoCode",
-								name = "name",
-								graph = true
 							}
-						}
-					}))
+						)
+					),
 				}
 			)
 		);
 
-		var results = await client.GetCurrencies();
+		var results = await client.GetCurrencies(TestContext.Current.CancellationToken);
 		Assert.Equal(1, results.ResultsInfo.TotalRecords);
 		Assert.Equal("timezoneReference", results.ResultsInfo.TimezoneReference);
 

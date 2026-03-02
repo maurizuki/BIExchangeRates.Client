@@ -55,7 +55,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetLatestRates(language);
+		await client.GetLatestRates(TestContext.Current.CancellationToken, language);
 	}
 
 	[Theory]
@@ -77,7 +77,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetDailyRates(new DateTime(2020, 1, 2), currency, language);
+		await client.GetDailyRates(TestContext.Current.CancellationToken, new DateTime(2020, 1, 2), currency, language);
 	}
 
 	[Theory]
@@ -101,7 +101,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetDailyRates(new DateTime(2020, 1, 2), baseCurrencies, currency, language);
+		await client.GetDailyRates(TestContext.Current.CancellationToken, new DateTime(2020, 1, 2), baseCurrencies, currency, language);
 	}
 
 	[Theory]
@@ -123,7 +123,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetMonthlyAverageRates(1, 2020, currency, language);
+		await client.GetMonthlyAverageRates(TestContext.Current.CancellationToken, 1, 2020, currency, language);
 	}
 
 	[Theory]
@@ -147,7 +147,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetMonthlyAverageRates(1, 2020, baseCurrencies, currency, language);
+		await client.GetMonthlyAverageRates(TestContext.Current.CancellationToken, 1, 2020, baseCurrencies, currency, language);
 	}
 
 	[Theory]
@@ -169,7 +169,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetAnnualAverageRates(2020, currency, language);
+		await client.GetAnnualAverageRates(TestContext.Current.CancellationToken, 2020, currency, language);
 	}
 
 	[Theory]
@@ -193,7 +193,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetAnnualAverageRates(2020, baseCurrencies, currency, language);
+		await client.GetAnnualAverageRates(TestContext.Current.CancellationToken, 2020, baseCurrencies, currency, language);
 	}
 
 	[Theory]
@@ -216,7 +216,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetDailyTimeSeries(new DateTime(2020, 1, 2), new DateTime(2021, 3, 4), baseCurrency, currency, language);
+		await client.GetDailyTimeSeries(TestContext.Current.CancellationToken, new DateTime(2020, 1, 2), new DateTime(2021, 3, 4), baseCurrency, currency, language);
 	}
 
 	[Theory]
@@ -239,7 +239,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetMonthlyTimeSeries(1, 2020, 12, 2021, baseCurrency, currency, language);
+		await client.GetMonthlyTimeSeries(TestContext.Current.CancellationToken, 1, 2020, 12, 2021, baseCurrency, currency, language);
 	}
 
 	[Theory]
@@ -262,7 +262,7 @@ public class TestRequests
 			)
 		);
 
-		await client.GetAnnualTimeSeries(2020, 2021, baseCurrency, currency, language);
+		await client.GetAnnualTimeSeries(TestContext.Current.CancellationToken, 2020, 2021, baseCurrency, currency, language);
 	}
 
 	[Theory]
@@ -283,6 +283,6 @@ public class TestRequests
 			)
 		);
 
-		await client.GetCurrencies(language);
+		await client.GetCurrencies(TestContext.Current.CancellationToken, language);
 	}
 }
