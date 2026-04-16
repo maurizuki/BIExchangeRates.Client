@@ -4,13 +4,13 @@ A .NET wrapper for the REST API of the currency exchange rates of [Banca d'Itali
 
 ## Getting started
 
-To add BIExchangeRates.Client to your project, you can use the following NuGet Package Manager command:
+Use the following command to add the package to a .NET project:
 
 ```PowerShell
-Install-Package BIExchangeRates.Client
+dotnet add package BIExchangeRates.Client
 ```
 
-More options are available on the [BIExchangeRates.Client page](https://www.nuget.org/packages/BIExchangeRates.Client) of the NuGet Gallery website.
+More options are available on the [package page](https://www.nuget.org/packages/BIExchangeRates.Client) of the NuGet Gallery website.
 
 The console application [BIExchangeRates.Console](https://github.com/maurizuki/BIExchangeRates.Client/tree/v1.2.0/src/BIExchangeRates.Console) is intended as an example on how to use the REST API wrapper in a real scenario.
 
