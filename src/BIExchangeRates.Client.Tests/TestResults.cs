@@ -21,7 +21,6 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -41,32 +40,31 @@ public class TestResults
 			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
 					Content = new StringContent(
-						JsonConvert.SerializeObject(
-							new
-							{
-								resultsInfo = new
-								{
-									totalRecords = 1,
-									timezoneReference = "timezoneReference",
-									notice = "notice",
-								},
-								latestRates = new object[]
-								{
-									new
-									{
-										currency = "currency",
-										country = "country",
-										isoCode = "isoCode",
-										uicCode = "uicCode",
-										eurRate,
-										usdRate,
-										usdExchangeConvention = "usdExchangeConvention",
-										usdExchangeConventionCode = "usdExchangeConventionCode",
-										referenceDate = "2020-01-02",
-									},
-								},
-							}
-						)
+						$$"""
+						  {
+						  	"resultsInfo":
+						  	{
+						  		"totalRecords": 1,
+						  		"timezoneReference": "timezoneReference",
+						  		"notice": "notice"
+						  	},
+						  	"latestRates":
+						  	[
+						  		{
+						  			"currency": "currency",
+						  			"country": "country",
+						  			"isoCode": "isoCode",
+						  			"uicCode": "uicCode",
+						  			"eurRate": "{{eurRate}}",
+						  			"usdRate": "{{usdRate}}",
+						  			"usdExchangeConvention": "usdExchangeConvention",
+						  			"usdExchangeConventionCode": "usdExchangeConventionCode",
+						  			"referenceDate": "2020-01-02"
+						  		}
+						  	]
+						  }
+
+						  """
 					),
 				}
 			)
@@ -98,30 +96,29 @@ public class TestResults
 			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
 					Content = new StringContent(
-						JsonConvert.SerializeObject(
-							new
-							{
-								resultsInfo = new
-								{
-									totalRecords = 1,
-									timezoneReference = "timezoneReference",
-								},
-								rates = new object[]
-								{
-									new
-									{
-										currency = "currency",
-										country = "country",
-										isoCode = "isoCode",
-										uicCode = "uicCode",
-										avgRate,
-										exchangeConvention = "exchangeConvention",
-										exchangeConventionCode = "exchangeConventionCode",
-										referenceDate = "2020-01-02",
-									},
-								},
-							}
-						)
+						$$"""
+						  {
+						  	"resultsInfo":
+						  	{
+						  		"totalRecords": 1,
+						  		"timezoneReference": "timezoneReference"
+						  	},
+						  	"rates":
+						  	[
+						  		{
+						  			"currency": "currency",
+						  			"country": "country",
+						  			"isoCode": "isoCode",
+						  			"uicCode": "uicCode",
+						  			"avgRate": "{{avgRate}}",
+						  			"exchangeConvention": "exchangeConvention",
+						  			"exchangeConventionCode": "exchangeConventionCode",
+						  			"referenceDate": "2020-01-02"
+						  		}
+						  	]
+						  }
+
+						  """
 					),
 				}
 			)
@@ -151,30 +148,29 @@ public class TestResults
 			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
 					Content = new StringContent(
-						JsonConvert.SerializeObject(
-							new
-							{
-								resultsInfo = new
-								{
-									totalRecords = 1,
-								},
-								rates = new object[]
-								{
-									new
-									{
-										currency = "currency",
-										country = "country",
-										isoCode = "isoCode",
-										uicCode = "uicCode",
-										avgRate,
-										exchangeConvention = "exchangeConvention",
-										exchangeConventionCode = "exchangeConventionCode",
-										year = 2020,
-										month = 1,
-									},
-								},
-							}
-						)
+						$$"""
+						  {
+						  	"resultsInfo":
+						  	{
+						  		"totalRecords": 1
+						  	},
+						  	"rates":
+						  	[
+						  		{
+						  			"currency": "currency",
+						  			"country": "country",
+						  			"isoCode": "isoCode",
+						  			"uicCode": "uicCode",
+						  			"avgRate": "{{avgRate}}",
+						  			"exchangeConvention": "exchangeConvention",
+						  			"exchangeConventionCode": "exchangeConventionCode",
+						  			"year": 2020,
+						  			"month": 1
+						  		}
+						  	]
+						  }
+
+						  """
 					),
 				}
 			)
@@ -204,29 +200,27 @@ public class TestResults
 			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
 					Content = new StringContent(
-						JsonConvert.SerializeObject(
-							new
-							{
-								resultsInfo = new
-								{
-									totalRecords = 1,
-								},
-								rates = new object[]
-								{
-									new
-									{
-										currency = "currency",
-										country = "country",
-										isoCode = "isoCode",
-										uicCode = "uicCode",
-										avgRate,
-										exchangeConvention = "exchangeConvention",
-										exchangeConventionCode = "exchangeConventionCode",
-										year = 2020,
-									},
-								},
-							}
-						)
+						$$"""
+						  {
+						  	"resultsInfo":
+						  	{
+						  		"totalRecords": 1
+						  	},
+						  	"rates":
+						  	[
+						  		{
+						  			"currency": "currency",
+						  			"country": "country",
+						  			"isoCode": "isoCode",
+						  			"uicCode": "uicCode",
+						  			"avgRate": "{{avgRate}}",
+						  			"exchangeConvention": "exchangeConvention",
+						  			"exchangeConventionCode": "exchangeConventionCode",
+						  			"year": 2020
+						  		}
+						  	]
+						  }
+						  """
 					),
 				}
 			)
@@ -255,29 +249,28 @@ public class TestResults
 			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
 					Content = new StringContent(
-						JsonConvert.SerializeObject(
-							new
-							{
-								resultsInfo = new
-								{
-									totalRecords = 1,
-									timezoneReference = "timezoneReference",
-									currency = "currency",
-									isoCode = "isoCode",
-									uicCode = "uicCode",
-									exchangeConventionCode = "exchangeConventionCode",
-								},
-								rates = new object[]
-								{
-									new
-									{
-										referenceDate = "2020-01-02",
-										avgRate,
-										exchangeConvention = "exchangeConvention",
-									},
-								},
-							}
-						)
+						$$"""
+						  {
+						  	"resultsInfo":
+						  	{
+						  		"totalRecords": 1,
+						  		"timezoneReference": "timezoneReference",
+						  		"currency": "currency",
+						  		"isoCode": "isoCode",
+						  		"uicCode": "uicCode",
+						  		"exchangeConventionCode": "exchangeConventionCode"
+						  	},
+						  	"rates":
+						  	[
+						  		{
+						  			"referenceDate": "2020-01-02",
+						  			"avgRate": "{{avgRate}}",
+						  			"exchangeConvention": "exchangeConvention"
+						  		}
+						  	]
+						  }
+
+						  """
 					),
 				}
 			)
@@ -306,28 +299,27 @@ public class TestResults
 			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
 					Content = new StringContent(
-						JsonConvert.SerializeObject(
-							new
-							{
-								resultsInfo = new
-								{
-									totalRecords = 1,
-									currency = "currency",
-									isoCode = "isoCode",
-									uicCode = "uicCode",
-									exchangeConventionCode = "exchangeConventionCode",
-								},
-								rates = new object[]
-								{
-									new
-									{
-										referenceDate = "2020-01",
-										avgRate,
-										exchangeConvention = "exchangeConvention",
-									},
-								},
-							}
-						)
+						$$"""
+						  {
+						  	"resultsInfo":
+						  	{
+						  		"totalRecords": 1,
+						  		"currency": "currency",
+						  		"isoCode": "isoCode",
+						  		"uicCode": "uicCode",
+						  		"exchangeConventionCode": "exchangeConventionCode"
+						  	},
+						  	"rates":
+						  	[
+						  		{
+						  			"referenceDate": "2020-01",
+						  			"avgRate": "{{avgRate}}",
+						  			"exchangeConvention": "exchangeConvention"
+						  		},
+						  	],
+						  }
+
+						  """
 					),
 				}
 			)
@@ -355,28 +347,27 @@ public class TestResults
 			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
 					Content = new StringContent(
-						JsonConvert.SerializeObject(
-							new
-							{
-								resultsInfo = new
-								{
-									totalRecords = 1,
-									currency = "currency",
-									isoCode = "isoCode",
-									uicCode = "uicCode",
-									exchangeConventionCode = "exchangeConventionCode",
-								},
-								rates = new object[]
-								{
-									new
-									{
-										referenceDate = "2020",
-										avgRate,
-										exchangeConvention = "exchangeConvention",
-									},
-								},
-							}
-						)
+						$$"""
+						  {
+						  	"resultsInfo":
+						  	{
+						  		"totalRecords": 1,
+						  		"currency": "currency",
+						  		"isoCode": "isoCode",
+						  		"uicCode": "uicCode",
+						  		"exchangeConventionCode": "exchangeConventionCode"
+						  	},
+						  	"rates":
+						  	[
+						  		{
+						  			"referenceDate": "2020",
+						  			"avgRate": "{{avgRate}}",
+						  			"exchangeConvention": "exchangeConvention"
+						  		}
+						  	]
+						  }
+
+						  """
 					),
 				}
 			)
@@ -404,36 +395,34 @@ public class TestResults
 			new CustomHttpMessageHandler(_ => new HttpResponseMessage
 				{
 					Content = new StringContent(
-						JsonConvert.SerializeObject(
-							new
-							{
-								resultsInfo = new
-								{
-									totalRecords = 1,
-									timezoneReference = "timezoneReference",
-								},
-								currencies = new object[]
-								{
-									new
-									{
-										countries = new object[]
-										{
-											new
-											{
-												currencyIso = "currencyIso",
-												country = "country",
-												countryIso = "countryIso",
-												validityStartDate = "2020-01-02",
-												validityEndDate,
-											},
-										},
-										isoCode = "isoCode",
-										name = "name",
-										graph = true,
-									},
-								},
-							}
-						)
+						$$"""
+						  {
+						  	"resultsInfo":
+						  	{
+						  		"totalRecords": 1,
+						  		"timezoneReference": "timezoneReference"
+						  	},
+						  	"currencies":
+						  	[
+						  		{
+						  			"countries":
+						  			[
+						  				{
+						  					"currencyIso": "currencyIso",
+						  					"country": "country",
+						  					"countryIso": "countryIso",
+						  					"validityStartDate": "2020-01-02",
+						  					"validityEndDate": "{{validityEndDate}}"
+						  				},
+						  			],
+						  			"isoCode": "isoCode",
+						  			"name": "name",
+						  			"graph": true
+						  		}
+						  	]
+						  }
+
+						  """
 					),
 				}
 			)
