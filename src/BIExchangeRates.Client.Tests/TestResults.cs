@@ -315,8 +315,8 @@ public class TestResults
 						  			"referenceDate": "2020-01",
 						  			"avgRate": "{{avgRate}}",
 						  			"exchangeConvention": "exchangeConvention"
-						  		},
-						  	],
+						  		}
+						  	]
 						  }
 
 						  """
@@ -413,7 +413,7 @@ public class TestResults
 						  					"countryIso": "countryIso",
 						  					"validityStartDate": "2020-01-02",
 						  					"validityEndDate": "{{validityEndDate}}"
-						  				},
+						  				}
 						  			],
 						  			"isoCode": "isoCode",
 						  			"name": "name",
