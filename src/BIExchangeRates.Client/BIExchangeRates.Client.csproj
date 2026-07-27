@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>12.0</LangVersion>
-    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.0;net5.0</TargetFrameworks>
     <Authors>Maurizio Basaglia</Authors>
     <Description>A wrapper for the REST API of the currency exchange rates of Banca d'Italia (the central bank of Italy).</Description>
     <Copyright>© 2020+ Maurizio Basaglia</Copyright>
@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="System.Text.Json" Version="10.0.10" Condition="$(TargetFramework.StartsWith('netstandard'))" />
   </ItemGroup>
 
   <ItemGroup>

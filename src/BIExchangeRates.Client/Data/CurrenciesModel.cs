@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using BIExchangeRates.Client.Converters;
 
 namespace BIExchangeRates.Client.Data;
 
@@ -90,9 +92,10 @@ public sealed class CurrenciesModel
 			public DateTime ValidityStartDate { get; set; }
 
 			/// <summary>
-			/// Gets or sets the validity end date.
+			///     Gets or sets the validity end date.
 			/// </summary>
 			/// <returns>The validity end date.</returns>
+			[JsonConverter(typeof(NullableDateTimeJsonConverter))]
 			public DateTime? ValidityEndDate { get; set; }
 		}
 

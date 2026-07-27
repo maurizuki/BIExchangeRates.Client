@@ -21,10 +21,10 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using BIExchangeRates.Client.Data;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BIExchangeRates.Client.Data;
 
 namespace BIExchangeRates.Client;
 

@@ -21,15 +21,14 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 
-using BIExchangeRates.Client.Data;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using BIExchangeRates.Client.Data;
 
 namespace BIExchangeRates.Client;
 
@@ -448,21 +447,22 @@ public sealed class ExchangeRatesClient : HttpClient, IExchangeRatesClient, ICan
 		return baseCurrencyIsoCodes.Aggregate(string.Empty, (s, code) => $"{s}&baseCurrencyIsoCode={code}");
 	}
 
-	private static readonly JsonSerializerSettings SerializerSettings = new()
+	private static readonly JsonSerializerOptions SerializerOptions = new()
 	{
-		Error = (sender, args) => args.ErrorContext.Handled = true
+		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 	};
 
 	private async Task<T> GetModel<T>(string requestUri, CancellationToken cancellationToken)
 	{
 		var response = (await GetAsync(requestUri, HttpCompletionOption.ResponseHeadersRead, cancellationToken)).EnsureSuccessStatusCode();
-		using var textReader = new StreamReader(await response.Content.ReadAsStreamAsync(
-#if NET5_0_OR_GREATER
-			cancellationToken
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER
+		await
 #endif
-		));
-		using var jsonReader = new JsonTextReader(textReader);
-		cancellationToken.ThrowIfCancellationRequested();
-		return JsonSerializer.CreateDefault(SerializerSettings).Deserialize<T>(jsonReader);
+			using var stream = await response.Content.ReadAsStreamAsync(
+#if NET5_0_OR_GREATER
+				cancellationToken
+#endif
+			);
+		return await JsonSerializer.DeserializeAsync<T>(stream, SerializerOptions, cancellationToken);
 	}
 }

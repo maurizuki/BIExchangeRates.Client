@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using BIExchangeRates.Client.Converters;
 
 namespace BIExchangeRates.Client.Data;
 
@@ -91,15 +93,17 @@ public sealed class LatestRatesModel
 		public string UicCode { get; set; }
 
 		/// <summary>
-		/// Gets or sets the latest exchange rate of Euro.
+		///     Gets or sets the latest exchange rate of Euro.
 		/// </summary>
 		/// <returns>The latest exchange rate of Euro.</returns>
+		[JsonConverter(typeof(DoubleJsonConverter))]
 		public double EurRate { get; set; }
 
 		/// <summary>
-		/// Gets or sets the latest exchange rate of US Dollar.
+		///     Gets or sets the latest exchange rate of US Dollar.
 		/// </summary>
 		/// <returns>The latest exchange rate of US Dollar.</returns>
+		[JsonConverter(typeof(DoubleJsonConverter))]
 		public double UsdRate { get; set; }
 
 		/// <summary>

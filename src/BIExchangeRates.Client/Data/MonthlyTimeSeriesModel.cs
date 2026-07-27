@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using BIExchangeRates.Client.Converters;
 
 namespace BIExchangeRates.Client.Data;
 
@@ -79,15 +81,17 @@ public sealed class MonthlyTimeSeriesModel
 	public sealed class ExchangeRateModel
 	{
 		/// <summary>
-		/// Gets or sets the reference date.
+		///     Gets or sets the reference date.
 		/// </summary>
 		/// <returns>The reference date.</returns>
+		[JsonConverter(typeof(DateTimeJsonConverter))]
 		public DateTime ReferenceDate { get; set; }
 
 		/// <summary>
-		/// Gets or sets the monthly average exchange rate.
+		///     Gets or sets the monthly average exchange rate.
 		/// </summary>
 		/// <returns>The monthly average exchange rate.</returns>
+		[JsonConverter(typeof(DoubleJsonConverter))]
 		public double AvgRate { get; set; }
 
 		/// <summary>

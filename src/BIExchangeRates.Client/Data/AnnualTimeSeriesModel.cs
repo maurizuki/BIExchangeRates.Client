@@ -22,6 +22,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using BIExchangeRates.Client.Converters;
 
 namespace BIExchangeRates.Client.Data;
 
@@ -78,15 +80,17 @@ public sealed class AnnualTimeSeriesModel
 	public sealed class ExchangeRateModel
 	{
 		/// <summary>
-		/// Gets or sets the reference year.
+		///     Gets or sets the reference year.
 		/// </summary>
 		/// <returns>The reference year.</returns>
+		[JsonConverter(typeof(Int32JsonConverter))]
 		public int ReferenceDate { get; set; }
 
 		/// <summary>
-		/// Gets or sets the annual average exchange rate.
+		///     Gets or sets the annual average exchange rate.
 		/// </summary>
 		/// <returns>The annual average exchange rate.</returns>
+		[JsonConverter(typeof(DoubleJsonConverter))]
 		public double AvgRate { get; set; }
 
 		/// <summary>

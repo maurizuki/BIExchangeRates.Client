@@ -22,6 +22,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using BIExchangeRates.Client.Converters;
 
 namespace BIExchangeRates.Client.Data;
 
@@ -78,9 +80,10 @@ public sealed class AnnualAverageRatesModel
 		public string UicCode { get; set; }
 
 		/// <summary>
-		/// Gets or sets the annual average exchange rate.
+		///     Gets or sets the annual average exchange rate.
 		/// </summary>
 		/// <returns>The annual average exchange rate.</returns>
+		[JsonConverter(typeof(DoubleJsonConverter))]
 		public double AvgRate { get; set; }
 
 		/// <summary>
