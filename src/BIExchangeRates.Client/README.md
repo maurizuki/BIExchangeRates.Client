@@ -12,7 +12,7 @@ dotnet add package BIExchangeRates.Client
 
 More options are available on the [package page](https://www.nuget.org/packages/BIExchangeRates.Client) of the NuGet Gallery website.
 
-The console application [BIExchangeRates.Console](https://github.com/maurizuki/BIExchangeRates.Client/tree/v1.2.0/src/BIExchangeRates.Console) is intended as an example on how to use the REST API wrapper in a real scenario.
+The console application [BIExchangeRates.Console](https://github.com/maurizuki/BIExchangeRates.Client/tree/v1.3.0-rc.1/src/BIExchangeRates.Console) is intended as an example on how to use the REST API wrapper in a real scenario.
 
 ## Remarks
 
@@ -32,5 +32,5 @@ public class GoodController : ApiController
 
 ## Documentation
 
-* [BIExchangeRates.Client API Reference](https://github.com/maurizuki/BIExchangeRates.Client/blob/v1.2.0/docs/BIExchangeRates.Client.md)
+* [BIExchangeRates.Client API Reference](https://github.com/maurizuki/BIExchangeRates.Client/blob/v1.3.0-rc.1/docs/BIExchangeRates.Client.md)
 * [Official REST API documentation](https://tassidicambio.bancaditalia.it/terzevalute-wf-ui-web/assets/files/Operating_Instructions.pdf)

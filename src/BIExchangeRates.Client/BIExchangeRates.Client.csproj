@@ -9,13 +9,13 @@
     <PackageTags>currency currency-exchange currency-rates exchange-rates currency-exchange-rates banca-italia central-bank-of-italy bank-of-italy</PackageTags>
     <RepositoryUrl>https://github.com/maurizuki/BIExchangeRates.Client</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.2.0</Version>
+    <Version>1.3.0-rc.1</Version>
     <Title>BIExchangeRates.Client</Title>
     <PackageProjectUrl>https://github.com/maurizuki/BIExchangeRates.Client</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>Added method overloads with cancellation token parameter</PackageReleaseNotes>
+    <PackageReleaseNotes>Removed all Newtonsoft.Json dependencies</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
