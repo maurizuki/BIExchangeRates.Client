@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore src/BIExchangeRates.Client.Tests/BIExchangeRates.Client.Tests.csproj
     - name: Test
-      run: dotnet test --no-build --verbosity normal src/BIExchangeRates.Client.Tests/BIExchangeRates.Client.Tests.csproj
+      run: dotnet run --no-build --project src/BIExchangeRates.Client.Tests/BIExchangeRates.Client.Tests.csproj
