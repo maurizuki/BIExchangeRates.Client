@@ -1,0 +1,31 @@
+opencollection: 1.0.0
+
+info:
+  name: Exchange Rates
+  version: v1.0
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  variables:
+    - name: baseUri
+      value: https://tassidicambio.bancaditalia.it/terzevalute-wf-web/rest/v1.0
+
+docs:
+  content: "[Official REST API documentation](https://tassidicambio.bancaditalia.it/terzevalute-wf-ui-web/assets/files/Operating_Instructions.pdf)"
+  type: text/markdown
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
